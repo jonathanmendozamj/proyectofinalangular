@@ -67,7 +67,7 @@ export class StudentsTableComponent implements OnInit {
   }
 
   add() {
-    let element = {
+    let element: Student = {
       name: '',
       surname: '',
       dni: '',
