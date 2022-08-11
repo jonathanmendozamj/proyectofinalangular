@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { StudentFormComponent } from '../student-form/student-form.component';
+import data from './../../../assets/students.json';
+
 
 export interface Student {
   name: string;
@@ -17,43 +19,7 @@ export interface DialogDataStudent {
   modify: boolean;
 }
 
-const LIST_STUDENTS: Student[] = [
-  {
-    name: "Juan",
-    surname: "Perez",
-    dni: "32102541",
-    mail: "juanperez@coderhouse.com",
-    message: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis saepe natus unde mollitia soluta."
-  }, 
-  {
-    name: "Armando",
-    surname: "González",
-    dni: "32159748",
-    mail: "armando.gonzalez@gmail.com",
-    message: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis saepe natus unde mollitia soluta. Animi libero maxime voluptatum illum incidunt. Blanditiis porro molestias at cum officiis perferendis mollitia sequi dolor."
-  },
-  {
-    name: "Elio",
-    surname: "Marchand",
-    dni: "32140953",
-    mail: "elio.marchand@example.com",
-    message: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis saepe natus unde mollitia soluta. Animi libero maxime voluptatum illum incidunt. Blanditiis porro molestias at cum officiis perferendis mollitia sequi dolor."
-  },
-  {
-    name: "Soledad",
-    surname: "Ramos",
-    dni: "3125412",
-    mail: "soledad.ramos@example.com",
-    message: ""
-  },
-  {
-    name: "Isabel",
-    surname: "Hernandez",
-    dni: "32001458",
-    mail: "isabel.hernandez@example.com",
-    message: ""
-  }
-];
+const LIST_STUDENTS: Student[] = data;
 
 @Component({
   selector: 'app-students-table',
