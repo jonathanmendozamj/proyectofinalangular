@@ -1,0 +1,50 @@
+<h1 mat-dialog-title>{{ this.dialogData.title || '' }}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="formStudent">
+        <!-- Nombre -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input formControlName="name" matInput>
+            <mat-error *ngIf="this.formStudent.get('name')?.errors?.['required'] && this.formStudent.get('name')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formStudent.get('name')?.errors?.['maxlength'] && this.formStudent.get('name')?.touched">El nombre no puede tener más de 80 caracteres.</mat-error>
+        </mat-form-field>
+
+        <!-- Apellido -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Apellido</mat-label>
+            <input formControlName="surname" matInput>
+            <mat-error *ngIf="this.formStudent.get('surname')?.errors?.['required'] && this.formStudent.get('surname')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formStudent.get('surname')?.errors?.['maxlength'] && this.formStudent.get('surname')?.touched">El apellido no puede tener más de 80 caracteres.</mat-error>
+        </mat-form-field>
+
+        <!-- DNI - Documento Nacional de Identidad -->
+        <mat-form-field class="w-100 mb-2" appearance="fill" *ngIf="!this.dialogData?.modify">
+            <mat-label>DNI</mat-label>
+            <input formControlName="dni" matInput>
+            <mat-error *ngIf="this.formStudent.get('dni')?.errors?.['required'] && this.formStudent.get('dni')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formStudent.get('dni')?.errors?.['minlength'] && this.formStudent.get('dni')?.touched">El DNI no puede tener menos de 6 caracteres.</mat-error>
+            <mat-error *ngIf="this.formStudent.get('dni')?.errors?.['maxlength'] && this.formStudent.get('dni')?.touched">El DNI no puede tener más de 8 caracteres.</mat-error>
+            <mat-error *ngIf="this.formStudent.get('dni')?.errors?.['pattern'] && this.formStudent.get('dni')?.touched">El DNI debe ser únicamnente numérico.</mat-error>
+        </mat-form-field>
+
+        <!-- Mail -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Mail</mat-label>
+            <input formControlName="mail" matInput>
+            <mat-error *ngIf="this.formStudent.get('mail')?.errors?.['required'] && this.formStudent.get('mail')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formStudent.get('mail')?.errors?.['email'] && this.formStudent.get('mail')?.touched">El texto ingresado no corresponde a un formato de mail.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Mensaje</mat-label>
+            <textarea formControlName="message" matInput></textarea>
+            <mat-error *ngIf="this.formStudent.get('message')?.errors?.['maxlength'] && this.formStudent.get('message')?.touched">El mensaje no puede tener más de 500 caracteres.</mat-error>
+        </mat-form-field>
+    </form>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="close()">Cerrar</button>
+    <button mat-button (click)="update()" [disabled]="!this.formStudent.valid">Guardar</button>
+</div>
+
