@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { StudentsService } from 'src/app/services/students.service';
 import { StudentFormComponent } from '../student-form/student-form.component';
-import data from './../../../assets/students.json';
-
 
 export interface Student {
   name: string;
@@ -19,7 +18,7 @@ export interface DialogDataStudent {
   modify: boolean;
 }
 
-const LIST_STUDENTS: Student[] = data;
+const WIDTH_DIALOG = '480px';
 
 @Component({
   selector: 'app-students-table',
@@ -28,19 +27,24 @@ const LIST_STUDENTS: Student[] = data;
 })
 export class StudentsTableComponent implements OnInit {
   displayedColumns: string[] = ['Nombre', 'DNI', 'Mail', 'Acciones'];
-  dataSource: MatTableDataSource<Student> = new MatTableDataSource(LIST_STUDENTS);
+  LIST_STUDENTS: Student[] = [];
+  courses: any[] = [];
+  dataSource: MatTableDataSource<Student> = new MatTableDataSource();
   @ViewChild(MatTable) tabla!: MatTable<Student>;
 
-  constructor(private dialog: MatDialog) { 
-
+  constructor(private dialog: MatDialog,
+    private studentsService: StudentsService) { 
+      
   }
 
   ngOnInit(): void {
+    this.LIST_STUDENTS = this.studentsService.getStudents();
+    this.dataSource = new MatTableDataSource(this.LIST_STUDENTS);
   }
 
   edit(element: Student) {
     const dialogRef = this.dialog.open(StudentFormComponent, {
-      width: '480px',
+      width: WIDTH_DIALOG,
       data: {
         student: element,
         title: 'Modificar datos del estudiante',
@@ -52,7 +56,6 @@ export class StudentsTableComponent implements OnInit {
       if(result){
         const item = this.dataSource.data.find(student => student.dni === result.dni);
         const index = this.dataSource.data.indexOf(item!);
-        console.log('El index es ' + index);
 
         if(index >= 0) {
           this.dataSource.data[index] = result;
@@ -76,7 +79,7 @@ export class StudentsTableComponent implements OnInit {
     }
 
     const dialogRef = this.dialog.open(StudentFormComponent, {
-      width: '480px',
+      width: WIDTH_DIALOG,
       data: {
         student: element,
         title: 'Agregar nuevo estudiante',
@@ -90,5 +93,12 @@ export class StudentsTableComponent implements OnInit {
         this.tabla.renderRows();
       }
     });
+  }
+
+  filter(event: Event) {
+    console.log(event);
+    let obtainedValue = (event.target as HTMLInputElement).value;
+    obtainedValue = obtainedValue.trim().toLocaleLowerCase();
+    console.log(obtainedValue);
   }
 }

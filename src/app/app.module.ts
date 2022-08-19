@@ -12,6 +12,14 @@ import { StudentFormComponent } from './components/student-form/student-form.com
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppMaterialModule } from './app.material.module';
 import { FooterComponent } from './components/footer/footer.component';
+import { StudentsService } from './services/students.service';
+import { CoursesService } from './services/courses.service';
+import { CoursesComponent } from './components/courses/courses.component';
+import { NoPageFoundComponentComponent } from './components/no-page-found-component/no-page-found-component.component';
+import { AppRoutingModule } from './app-routing.module';
+import { PostsComponent } from './components/posts/posts.component';
+import { PostsService } from './services/posts.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,15 +30,24 @@ import { FooterComponent } from './components/footer/footer.component';
     ToolbarComponent,
     StudentsTableComponent,
     StudentFormComponent,
-    FooterComponent
+    FooterComponent,
+    CoursesComponent,
+    NoPageFoundComponentComponent,
+    PostsComponent
   ],
   imports: [
     AppMaterialModule,
     BrowserModule,
+    HttpClientModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    StudentsService, 
+    CoursesService,
+    PostsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

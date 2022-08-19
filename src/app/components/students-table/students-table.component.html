@@ -1,5 +1,10 @@
+<h1 class="align-middle">Tabla de estudiantes</h1>
+
 <div class="d-flex justify-content-between mb-3">
-    <h1 class="align-middle">Tabla de estudiantes</h1>
+    <mat-form-field class="align-middle">
+        <mat-label>Buscar por nombre</mat-label>
+        <input type="text" (keyup)="filter($event)" matInput>
+    </mat-form-field>
     <button class="align-middle" color="primary" mat-raised-button (click)="add()">
         <mat-icon>person_add</mat-icon>
         Agregar estudiante

@@ -1,0 +1,17 @@
+<div>
+    <h1>POSTS CON OBSERVABLES</h1>
+    <mat-form-field class="align-middle">
+        <mat-label>Buscar por nombre</mat-label>
+        <input type="text" (keyup)="filter($event)" matInput>
+    </mat-form-field>
+    <pre>
+        {{ posts | json }}
+    </pre>
+</div>
+
+<div>
+    <h1>POSTS CON PROMESAS</h1>
+    <pre>
+        {{ postsPromise | json }}
+    </pre>
+</div>
