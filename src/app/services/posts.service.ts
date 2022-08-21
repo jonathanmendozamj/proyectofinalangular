@@ -31,7 +31,6 @@ export class PostsService {
             mensaje: 'No es un array.'
           });
         }
-        
       })
       .catch(error => reject(error));
     });

@@ -10,8 +10,9 @@ import { PostsService } from 'src/app/services/posts.service';
 export class PostsComponent implements OnInit {
 
   posts: any[] = [];
-  postsPromise: any;
+  postsPromiseResult: any;
   postsSubscription!: Subscription;
+  postPromise!: Promise<any>;
 
   constructor(private postsService: PostsService) { }
 
@@ -30,17 +31,7 @@ export class PostsComponent implements OnInit {
 
     this.callSubscription();
     
-    this.postsService.getPostsPromise()
-      .then((posts) => {
-        console.log(posts);
-        this.postsPromise = posts;
-      })
-      .catch((error: any) => {
-        console.error(error);
-      })
-      .finally(() => {
-        console.log('Finalizo la promesa');
-      });
+    this.postPromise = this.postsService.getPostsPromise();
   }
 
   ngOnDestroy(): void {
