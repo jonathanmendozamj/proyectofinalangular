@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CoursesComponent } from './components/courses/courses.component';
 import { NoPageFoundComponentComponent } from './components/no-page-found-component/no-page-found-component.component';
 import { PostsComponent } from './components/posts/posts.component';
-import { StudentsTableComponent } from './components/students-table/students-table.component';
+import { StudentsTableComponent } from './students/components/students-table/students-table.component';
 
 const routes: Routes = [
 	{

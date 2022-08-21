@@ -11,17 +11,12 @@ export class CoursesComponent implements OnInit, OnDestroy {
 
   courses: any[] = [];
   coursesSubscription!: Subscription;
+  courses$!: Observable<any>;
 
   constructor(private coursesService: CoursesService) { }
 
   ngOnInit(): void {
-    this.coursesSubscription = this.coursesService.getCourses()
-    .pipe(
-      map((courses: any[]) => courses.filter(course => course.name.includes('a')))
-    ).subscribe((courses) => {
-      console.log("Entro a coursesSubscription()");
-      this.courses = courses;
-    });
+    this.courses$ = this.coursesService.getCourses();
   }
 
   ngOnDestroy(): void {

@@ -14,7 +14,7 @@ export interface Course {
 export class CoursesService {
   private observableCourses: Observable<any>;
   private courses: any[] = data;
-
+  
   constructor() { 
     this.observableCourses = new Observable<any>((subscriptor) => {
       subscriptor.next(this.courses);
