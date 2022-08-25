@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>{{ this.dialogData.title || '' }}</h1>
+
+<div mat-dialog-content>
+    <form [formGroup]="formCourse">
+        <!-- Nombre -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input formControlName="name" matInput>
+            <mat-error *ngIf="this.formCourse.get('name')?.errors?.['required'] && this.formCourse.get('name')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('name')?.errors?.['maxlength'] && this.formCourse.get('name')?.touched">El nombre no puede tener más de 80 caracteres.</mat-error>
+        </mat-form-field>
+
+        <!-- Comisión -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Comisión</mat-label>
+            <input formControlName="comission" matInput>
+            <mat-error *ngIf="this.formCourse.get('comission')?.errors?.['required'] && this.formCourse.get('comission')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('comission')?.errors?.['minlength'] && this.formCourse.get('comission')?.touched">La comisión no puede tener menos de 4 caracteres.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('comission')?.errors?.['maxlength'] && this.formCourse.get('comission')?.touched">La comisión no puede tener más de 8 caracteres.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('comission')?.errors?.['pattern'] && this.formCourse.get('comission')?.touched">La comisión debe ser únicamente numérico.</mat-error>
+        </mat-form-field>
+    </form>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="close()">Cerrar</button>
+    <button mat-button (click)="update()" [disabled]="!this.formCourse.valid">Guardar</button>
+</div>

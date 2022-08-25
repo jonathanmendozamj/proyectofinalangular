@@ -1,22 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CoursesComponent } from './components/courses/courses.component';
-import { NoPageFoundComponentComponent } from './components/no-page-found-component/no-page-found-component.component';
-import { PostsComponent } from './components/posts/posts.component';
-import { StudentsTableComponent } from './components/students-table/students-table.component';
+import { HomeComponent } from './core/components/home/home.component';
+import { NoPageFoundComponentComponent } from './core/components/no-page-found-component/no-page-found-component.component';
 
 const routes: Routes = [
 	{
 		path: 'inicio',
-		component: StudentsTableComponent
-	},
-	{
-		path: 'cursos',
-		component: CoursesComponent
-	},
-	{
-		path: 'posts',
-		component: PostsComponent
+		component: HomeComponent
 	},
 	{
 		path: '',

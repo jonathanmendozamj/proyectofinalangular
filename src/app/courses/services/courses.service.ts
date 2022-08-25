@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import data from './../../assets/courses.json';
+import data from './../../../assets/courses.json';
 
 export interface Course {
   id: number;

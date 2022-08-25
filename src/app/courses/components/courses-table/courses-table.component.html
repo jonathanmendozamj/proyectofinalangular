@@ -1,0 +1,39 @@
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mb-3 w-100">
+
+    <!-- Columna ID -->
+    <ng-container matColumnDef="ID">
+        <th mat-header-cell *matHeaderCellDef appFontSize>DNI</th>
+        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <!-- Columna nombre -->
+    <ng-container matColumnDef="Nombre">
+        <th mat-header-cell *matHeaderCellDef appFontSize>Nombre</th>
+        <td mat-cell *matCellDef="let element">{{ element.name | uppercase }}</td>
+    </ng-container>
+
+    <!-- Columna DNI -->
+    <ng-container matColumnDef="Comision">
+        <th mat-header-cell *matHeaderCellDef appFontSize>Comisión</th>
+        <td mat-cell *matCellDef="let element">{{ element.comission }}</td>
+    </ng-container>
+
+    <!-- Columna Acciones -->
+    <ng-container matColumnDef="Acciones">
+        <th mat-header-cell *matHeaderCellDef appFontSize>Acciones</th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="showDetail(element)">
+                <mat-icon>info</mat-icon>
+            </button>
+            <button mat-icon-button (click)="edit(element)">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="delete(element)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

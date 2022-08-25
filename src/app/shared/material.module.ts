@@ -9,6 +9,16 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
+    imports: [
+        MatTableModule,
+        MatToolbarModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        MatSidenavModule
+    ],
     exports: [
         MatTableModule,
         MatToolbarModule,
@@ -20,6 +30,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
         MatSidenavModule
     ]
 })
-export class AppMaterialModule {
+export class MaterialModule {
 
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { StudentsService } from 'src/app/services/students.service';
+import { StudentsService } from './../../services/students.service';
 import { StudentFormComponent } from '../student-form/student-form.component';
 
 export interface Student {
@@ -28,7 +28,6 @@ const WIDTH_DIALOG = '480px';
 export class StudentsTableComponent implements OnInit {
   displayedColumns: string[] = ['Nombre', 'DNI', 'Mail', 'Acciones'];
   LIST_STUDENTS: Student[] = [];
-  courses: any[] = [];
   dataSource: MatTableDataSource<Student> = new MatTableDataSource();
   @ViewChild(MatTable) tabla!: MatTable<Student>;
 
@@ -100,5 +99,9 @@ export class StudentsTableComponent implements OnInit {
     let obtainedValue = (event.target as HTMLInputElement).value;
     obtainedValue = obtainedValue.trim().toLocaleLowerCase();
     console.log(obtainedValue);
+  }
+
+  showDetail(element: Student) {
+
   }
 }

@@ -13,5 +13,15 @@
         "id": 3, 
         "name": "Swift", 
         "commission": "32330"
+    },
+    {
+        "id": 4, 
+        "name": "React JS", 
+        "commission": "32340"
+    },
+    {
+        "id": 5, 
+        "name": "UX/UI", 
+        "commission": "32350"
     }
 ]

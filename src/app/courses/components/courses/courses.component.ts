@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription, map } from 'rxjs';
-import { CoursesService } from 'src/app/services/courses.service';
+import { CoursesService } from './../../services/courses.service';
 
 @Component({
   selector: 'app-courses',
@@ -18,7 +18,7 @@ export class CoursesComponent implements OnInit, OnDestroy {
     this.coursesSubscription = this.coursesService.getCourses()
     .pipe(
       map((courses: any[]) => courses.filter(course => course.name.includes('a')))
-    ).subscribe((courses) => {
+    ).subscribe((courses: any) => {
       console.log("Entro a coursesSubscription()");
       this.courses = courses;
     });
