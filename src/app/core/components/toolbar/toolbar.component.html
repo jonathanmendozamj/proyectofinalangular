@@ -1,4 +1,10 @@
-<p><button mat-button routerLink="estudiantes/lista">Estudiantes</button></p>
-<p><button mat-button routerLink="cursos/lista">Cursos</button></p>
-<p><button mat-button>Inscripciones</button></p>
-<p><button mat-button>Usuarios</button></p>
+<div *ngIf="session$ | async as Session">
+    <div *ngIf="Session.isActive">
+        <p><button mat-button routerLink="inicio">Inicio</button></p>
+        <p><button mat-button routerLink="estudiantes/lista">Estudiantes</button></p>
+        <p><button mat-button routerLink="cursos/lista">Cursos</button></p>
+        <p><button mat-button routerLink="inscripciones/lista">Inscripciones</button></p>
+        <p><button mat-button routerLink="usuarios/lista">Usuarios</button></p>
+        <p><button mat-button (click)="logout()">Cerrar Sesión</button></p>
+    </div>
+</div>

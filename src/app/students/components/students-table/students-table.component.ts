@@ -3,14 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { StudentsService } from './../../services/students.service';
 import { StudentFormComponent } from '../student-form/student-form.component';
-
-export interface Student {
-  name: string;
-  surname: string;
-  dni: string;
-  mail: string;
-  message: string;
-}
+import { StudentDetailComponent } from '../student-detail/student-detail.component';
+import { Student } from 'src/app/core/models/student';
+import { Observable } from 'rxjs';
+import { Session } from 'src/app/core/models/session';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 export interface DialogDataStudent {
   student: Student;
@@ -31,14 +28,29 @@ export class StudentsTableComponent implements OnInit {
   dataSource: MatTableDataSource<Student> = new MatTableDataSource();
   @ViewChild(MatTable) tabla!: MatTable<Student>;
 
+  session$!: Observable<Session>;
+
   constructor(private dialog: MatDialog,
+    private authService: AuthService,
     private studentsService: StudentsService) { 
       
   }
 
   ngOnInit(): void {
-    this.LIST_STUDENTS = this.studentsService.getStudents();
-    this.dataSource = new MatTableDataSource(this.LIST_STUDENTS);
+    this.studentsService.getStudents().subscribe({
+      next: (data) => {
+        this.LIST_STUDENTS = data as Student[];
+        this.dataSource = new MatTableDataSource(this.LIST_STUDENTS);
+      },
+      error: (error) => {
+        console.error(error);
+      },
+      complete: () => {
+        console.log('Completado.');
+      }
+    });
+
+    this.session$ = this.authService.getSession();
   }
 
   edit(element: Student) {
@@ -102,6 +114,13 @@ export class StudentsTableComponent implements OnInit {
   }
 
   showDetail(element: Student) {
-
+    const dialogRef = this.dialog.open(StudentDetailComponent, {
+      width: WIDTH_DIALOG,
+      data: {
+        student: element,
+        title: 'Ver detalle del estudiante',
+        modify: true
+      }
+    });
   }
 }

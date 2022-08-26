@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>{{ this.dialogData.title || '' }}</h1>
+
+<div mat-dialog-content >
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Nombre</label>
+        <label class="font-weight-bold text-right">{{ this.dialogData.inscription.name || '' }} {{ (this.dialogData.inscription.surname || '') | uppercase }}</label>
+    </div>
+
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>DNI</label>
+        <label class="font-weight-bold text-right">{{ this.dialogData.inscription.dni || '' }}</label>
+    </div>
+
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Curso</label>
+        <label class="font-weight-bold text-right">{{ (this.dialogData.inscription.nameCourse || '') | uppercase }}</label>
+    </div>
+
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Comisión</label>
+        <label class="font-weight-bold text-right">{{ this.dialogData.inscription.commission || '' }}</label>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="close()">Cerrar</button>
+</div>

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Session } from '../../models/session';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +10,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  session$!: Observable<Session>;
+
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.session$ = this.authService.getSession();
   }
 
 }

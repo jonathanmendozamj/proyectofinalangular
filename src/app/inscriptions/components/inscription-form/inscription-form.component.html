@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>{{ this.dialogData.title || '' }}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="formInscription">
+        <!-- Nombre -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Nombre completo</mat-label>
+            <mat-select formControlName="dni">
+                <mat-option *ngFor="let student of students" [value]="student.dni">
+                    {{ student.name }} {{ student.surname | uppercase }} ({{ student.dni }})
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="this.formInscription.get('dni')?.errors?.['required'] && this.formInscription.get('dni')?.touched">Este campo no puede quedar vacío.</mat-error>
+        </mat-form-field>
+
+        <!-- Curso -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Curso</mat-label>
+            <mat-select formControlName="commission">
+                <mat-option *ngFor="let course of courses" [value]="course.commission">
+                    {{ course.nameCourse }} ({{ course.commission }})
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="this.formInscription.get('commission')?.errors?.['required'] && this.formInscription.get('commission')?.touched">Este campo no puede quedar vacío.</mat-error>
+        </mat-form-field>
+    </form>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="close()">Cerrar</button>
+    <button mat-button (click)="update()" [disabled]="!this.formInscription.valid">Guardar</button>
+</div>

@@ -6,9 +6,9 @@ import { StudentsTableComponent } from './components/students-table/students-tab
 import { StudentPipe } from './pipes/student-pipe.pipe';
 import { StudentsRoutingModule } from './students-routing.module';
 import { StudentDetailComponent } from './components/student-detail/student-detail.component';
-import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../shared/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -20,9 +20,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     StudentsRoutingModule,
-    MaterialModule,
-    FormsModule, 
-    ReactiveFormsModule
+    SharedModule
   ],
   providers: [
     StudentsService

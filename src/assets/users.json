@@ -1,0 +1,32 @@
+[
+    {
+        "user": "user1",
+        "password": "123456",
+        "profile": "admin"
+    },
+    {
+        "user": "user2",
+        "password": "123456",
+        "profile": "user"
+    },
+    {
+        "user": "user3",
+        "password": "123456",
+        "profile": "user"
+    },
+    {
+        "user": "user4",
+        "password": "123456",
+        "profile": "admin"
+    },
+    {
+        "user": "user5",
+        "password": "123456",
+        "profile": "user"
+    },
+    {
+        "user": "user6",
+        "password": "123456",
+        "profile": "admin"
+    }
+]

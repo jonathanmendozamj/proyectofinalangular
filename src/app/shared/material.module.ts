@@ -7,6 +7,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSelectModule } from "@angular/material/select";
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
+
 
 @NgModule({
     imports: [
@@ -17,7 +21,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
         MatButtonModule,
         MatIconModule,
         MatInputModule,
-        MatSidenavModule
+        MatSidenavModule,
+        MatSelectModule,
+        MatCardModule,
+        MatRadioModule
     ],
     exports: [
         MatTableModule,
@@ -27,7 +34,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
         MatButtonModule,
         MatIconModule,
         MatInputModule,
-        MatSidenavModule
+        MatSidenavModule,
+        MatSelectModule,
+        MatCardModule,
+        MatRadioModule
     ]
 })
 export class MaterialModule {

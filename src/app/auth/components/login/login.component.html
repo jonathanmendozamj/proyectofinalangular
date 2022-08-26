@@ -1,0 +1,21 @@
+<mat-card>
+    <mat-card-content>
+        <form form [formGroup]="formLogin" (ngSubmit)="onSubmitForm()">
+            <mat-form-field class="w-100 mb-2" appearance="fill">
+                <mat-label>Usuario</mat-label>
+                <input formControlName="user" matInput>
+                <mat-error *ngIf="this.formLogin.get('user')?.errors?.['required'] && this.formLogin.get('user')?.touched">Este campo no puede quedar vacío.</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100 mb-2" appearance="fill">
+                <mat-label>Contraseña</mat-label>
+                <input type="password" formControlName="password" matInput>
+                <mat-error *ngIf="this.formLogin.get('password')?.errors?.['required'] && this.formLogin.get('password')?.touched">Este campo no puede quedar vacío.</mat-error>
+            </mat-form-field>
+
+            <button mat-raised-button [disabled]="formLogin.invalid" color="primary">Login</button>
+        </form>
+    </mat-card-content>
+</mat-card>
+
+<pre>{{ users$ | async | json }}</pre>
