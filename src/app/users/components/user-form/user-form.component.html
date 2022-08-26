@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>{{ this.dialogData.title || '' }} {{ this.dialogData.user.user || '' }}</h1>
+<div mat-dialog-content>
+    <form form [formGroup]="formUser">
+        <mat-form-field class="w-100 mb-2" appearance="fill" *ngIf="!this.dialogData?.modify">
+            <mat-label>Usuario</mat-label>
+            <input formControlName="user" matInput>
+            <mat-error *ngIf="this.formUser.get('user')?.errors?.['required'] && this.formUser.get('user')?.touched">Este campo no puede quedar vacío.</mat-error>
+        </mat-form-field>
+
+        <div class="w-100 mb-2" apperance="fill">
+            <mat-label>Tipo usuario</mat-label>
+            <mat-radio-group formControlName="profile">
+                <mat-radio-button value="admin">Administrador</mat-radio-button>
+                <mat-radio-button value="user">Usuario</mat-radio-button>
+            </mat-radio-group>
+            <mat-error *ngIf="this.formUser.get('profile')?.errors?.['required'] && this.formUser.get('profile')?.touched">Este campo no puede quedar vacío.</mat-error>
+        </div>
+    
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Contraseña</mat-label>
+            <input type="password" formControlName="password" matInput>
+            <mat-error *ngIf="this.formUser.get('password')?.errors?.['required'] && this.formUser.get('password')?.touched">Este campo no puede quedar vacío.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Repita Contraseña</mat-label>
+            <input type="password" formControlName="confirmPassword" matInput>
+            <mat-error *ngIf="this.formUser.get('confirmPassword')?.errors?.['required'] && this.formUser.get('confirmPassword')?.touched">Este campo no puede quedar vacío.</mat-error>
+        </mat-form-field>
+    </form>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="close()">Cerrar</button>
+    <button mat-button (click)="update()" [disabled]="!this.formUser.valid">Guardar</button>
+</div>

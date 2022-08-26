@@ -1,17 +1,22 @@
 [
     {
-        "id": 1, 
-        "name": "Angular", 
+        "nameCourse": "Angular", 
         "commission": "32310"
     },
     {
-        "id": 2, 
-        "name": "Bootstrap", 
+        "nameCourse": "Bootstrap", 
         "commission": "32320"
     },
     {
-        "id": 3, 
-        "name": "Swift", 
+        "nameCourse": "Swift", 
         "commission": "32330"
+    },
+    {
+        "nameCourse": "React JS", 
+        "commission": "32340"
+    },
+    {
+        "nameCourse": "UX/UI", 
+        "commission": "32350"
     }
 ]
