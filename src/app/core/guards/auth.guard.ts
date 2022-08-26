@@ -14,9 +14,7 @@ export class AuthGuard implements CanActivate, CanLoad {
 
   }
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+  getSession() {
     return this.authService.getSession().pipe(
       map((session: Session) => {
         if(session.isActive){
@@ -29,21 +27,17 @@ export class AuthGuard implements CanActivate, CanLoad {
     );
   }
 
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return this.getSession();
+  }
+
   
   canLoad(
     route: Route,
     segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      return this.authService.getSession().pipe(
-        map((session: Session) => {
-          console.log(session);
-          if(session.isActive){
-            return true;
-          }else{
-            this.router.navigate(['/login']);
-            return false;
-          }
-        })
-      );
+      return this.getSession();
   }
   
 }
