@@ -4,23 +4,23 @@
         <!-- Nombre -->
         <mat-form-field class="w-100 mb-2" appearance="fill">
             <mat-label>Nombre completo</mat-label>
-            <mat-select formControlName="dni">
-                <mat-option *ngFor="let student of students" [value]="student.dni">
-                    {{ student.name }} {{ student.surname | uppercase }} ({{ student.dni }})
+            <mat-select formControlName="idStudent">
+                <mat-option *ngFor="let student of students" [value]="student.id">
+                    {{ student | studentName }} ({{ student.dni }})
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="this.formInscription.get('dni')?.errors?.['required'] && this.formInscription.get('dni')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formInscription.get('idStudent')?.errors?.['required'] && this.formInscription.get('idStudent')?.touched">Este campo no puede quedar vacío.</mat-error>
         </mat-form-field>
 
         <!-- Curso -->
         <mat-form-field class="w-100 mb-2" appearance="fill">
             <mat-label>Curso</mat-label>
-            <mat-select formControlName="commission">
-                <mat-option *ngFor="let course of courses" [value]="course.commission">
+            <mat-select formControlName="idCourse">
+                <mat-option *ngFor="let course of courses" [value]="course.id">
                     {{ course.nameCourse }} ({{ course.commission }})
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="this.formInscription.get('commission')?.errors?.['required'] && this.formInscription.get('commission')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formInscription.get('idCourse')?.errors?.['required'] && this.formInscription.get('idCourse')?.touched">Este campo no puede quedar vacío.</mat-error>
         </mat-form-field>
     </form>
 </div>

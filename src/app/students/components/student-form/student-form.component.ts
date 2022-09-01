@@ -21,6 +21,7 @@ export class StudentFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.formStudent = this.fb.group({
+      id: [this.dialogData.student?.id],
       name: [this.dialogData.student?.name, [Validators.required, Validators.maxLength(80)]],
       surname: [this.dialogData.student?.surname, [Validators.required, Validators.maxLength(80)]],
       dni: [this.dialogData.student?.dni, [Validators.required, Validators.pattern(/^\d+$/), Validators.minLength(6), Validators.maxLength(8)]],
@@ -36,5 +37,4 @@ export class StudentFormComponent implements OnInit {
   close() {
     this.dialogRef.close();
   }
-
 }

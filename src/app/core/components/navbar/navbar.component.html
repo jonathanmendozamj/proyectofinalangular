@@ -1,8 +1,8 @@
 <mat-toolbar color="primary" class="d-flex justify-content-between">
-    <span>Proyecto Final - Coderhouse</span>
-    <div *ngIf="session$ | async as Session">
-        <div *ngIf="Session.isActive">
-            <h6>{{ Session.user?.user }} - {{ Session.user?.profile }}</h6>
+    <span>Proyecto Final Angular - Coderhouse</span>
+    <div *ngIf="session$ | async as session">
+        <div *ngIf="session.isActive">
+            <h6>{{ session.user?.user }} - {{ ((session.user?.isAdmin) ? 'Admin' : 'User') }}</h6>
         </div>
     </div>
 </mat-toolbar>

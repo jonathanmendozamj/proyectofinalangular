@@ -4,8 +4,7 @@ import { UsersTableComponent } from './components/users-table/users-table.compon
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { UsersRoutingModule } from './users-routing.module';
 import { SharedModule } from '../shared/shared.module';
-
-
+import { UsersService } from './services/users.service';
 
 @NgModule({
   declarations: [
@@ -16,6 +15,7 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     UsersRoutingModule,
     SharedModule
-  ]
+  ], 
+  providers: [UsersService]
 })
 export class UsersModule { }

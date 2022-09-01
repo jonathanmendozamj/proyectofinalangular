@@ -1,71 +1,68 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import data from './../../../assets/courses.json';
-import dataInscription from './../../../assets/inscriptions.json';
-import dataStudents from './../../../assets/students.json';
+import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
+import { Course } from 'src/app/core/models/course';
+import { environment } from 'src/environments/environment';
+
+const API = environment.api;
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoursesService {
-  private coursesObservable: Observable<any>;
-  private inscriptionsObservable!: Observable<any>;
+  private subject!: BehaviorSubject<Course[]>;
+  
+  constructor(private http: HttpClient) { 
+    this.subject = new BehaviorSubject<Course[]>([]);
+  }
 
-  constructor() { 
-    this.coursesObservable = new Observable<any>((subscriber) => {
-      let courses = data;
+  private readCourses() {
+    this.http.get<Course[]>(`${ API }/courses`)
+      .pipe(
+        catchError(this.handleError)
+      )
+      .subscribe((courses) => {
+        this.subject.next(courses);
+      });
+  }
 
-      subscriber.next(courses);
+  getAllCourses() {
+    this.readCourses();
+    return this.subject;
+  }
 
-      subscriber.complete();
+  getCourse(id: String) {
+    return this.http.get<Course>(`${ API }/courses/${ id }`);
+  }
 
-      if(!Array.isArray(courses)) {
-        subscriber.error({
-          code: -1,
-          message: 'No es un array.'
-        });
-      }
-
-      if(courses.length === 0){
-        subscriber.error({
-          code: -1,
-          message: 'No hay alumnos en este array.'
-        });
-      }
+  addCourse(course: Course) {
+    return this.http.post<Course>(`${ API }/courses`, course).subscribe((course) => {
+      alert(`${ course.id } - ${ course.nameCourse } fue agregado satisfactoriamente.`);
+      this.readCourses();
     });
   }
 
-  getCourses() {
-    return this.coursesObservable;
+  modifyCourse(course: Course) {
+    this.http.put<Course>(`${ API }/courses/${ course.id }`, course).subscribe((course) => {
+      alert(`${course.id} - ${ course.nameCourse } fue editado satisfactoriamente.`);
+      this.readCourses();
+    });
   }
 
-  getInscriptions(commission: String) {
-    this.inscriptionsObservable = new Observable<any>((subscriber) => {
-      let inscriptionsForCourse = dataInscription.filter((item) => item.commission === commission);
-      console.log(inscriptionsForCourse);
-
-      let studentsPerCourse = inscriptionsForCourse.map((item) => dataStudents.find(student => item.dni === student.dni));
-      console.log(studentsPerCourse);
-
-      subscriber.next(studentsPerCourse);
-
-      subscriber.complete();
-
-      if(!Array.isArray(studentsPerCourse)) {
-        subscriber.error({
-          code: -1,
-          message: 'No es un array.'
-        });
-      }
-
-      if(studentsPerCourse.length === 0){
-        subscriber.error({
-          code: -1,
-          message: 'No hay inscripciones para este curso.'
-        });
-      }
+  deleteCourse(id: String) {
+    this.http.delete<Course>(`${ API }/courses/${id}`).subscribe((course) => {
+      alert(`${ course.id } - ${ course.nameCourse } fue eliminado satisfactoriamente.`);
+      this.readCourses();
     });
+  }
 
-    return this.inscriptionsObservable;
+  private handleError(error: HttpErrorResponse){
+    if(error.error instanceof ErrorEvent){
+      console.error('Error del lado del cliente', error.error.message);
+    } else {
+      console.error('Error del lado del servidor', error.status, error.message)
+      alert('Hubo un error de comunicación, intente de nuevo.');
+    }
+    return throwError(() => new Error('Error en la comunicacion HTTP'));
   }
 }

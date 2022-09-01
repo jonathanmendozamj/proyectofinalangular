@@ -11,7 +11,6 @@ export class FontSizeDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.fontSize);
     this.element.nativeElement.style.fontSize = (this.fontSize || '20px');
   }
 

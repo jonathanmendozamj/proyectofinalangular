@@ -24,8 +24,8 @@
         <ng-container matColumnDef="Acciones">
             <th mat-header-cell *matHeaderCellDef appFontSize>Acciones</th>
             <td mat-cell *matCellDef="let element">
-                <div *ngIf="session$ | async as Session">
-                    <div *ngIf="Session.user?.profile === 'admin'">
+                <div *ngIf="session$ | async as session">
+                    <div *ngIf="session.user?.isAdmin">
                         <button mat-icon-button (click)="showDetail(element)">
                             <mat-icon>info</mat-icon>
                         </button>

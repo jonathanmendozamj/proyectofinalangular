@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Course } from 'src/app/core/models/course';
 import { Session } from 'src/app/core/models/session';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 import { CoursesService } from '../../services/courses.service';
 import { CourseDetailComponent } from '../course-detail/course-detail.component';
 import { CourseFormComponent } from '../course-form/course-form.component';
@@ -33,12 +34,13 @@ export class CoursesTableComponent implements OnInit {
 
   constructor(private dialog: MatDialog,
     private authService: AuthService,
+    private inscriptionService: InscriptionsService,
     private courseService: CoursesService) { 
     
   }
 
   ngOnInit(): void {
-    this.courseService.getCourses().subscribe({
+    this.courseService.getAllCourses().subscribe({
       next: (data) => {
         this.LIST_COURSES = data as Course[];
 
@@ -51,8 +53,7 @@ export class CoursesTableComponent implements OnInit {
       complete: () => {
         console.log('Completado.');
       }
-    }
-    );
+    });
 
     this.session$ = this.authService.getSession();
   }
@@ -69,23 +70,30 @@ export class CoursesTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        const item = this.dataSource.data.find(course => course.commission === result.commission);
-        const index = this.dataSource.data.indexOf(item!);
-
-        if(index >= 0) {
-          this.dataSource.data[index] = result;
-          this.tabla.renderRows();
-        }
+        this.courseService.modifyCourse(result);
       }
     });
   }
 
   delete(element: Course) {
-    this.dataSource.data = this.dataSource.data.filter(course => course.commission !== element.commission);
+    let hasInscriptions = this.inscriptionService.hasCourseInscriptions(element.id).subscribe({
+      next: (hasInscriptions) => {
+        if(!hasInscriptions) {
+          this.courseService.deleteCourse(element.id);
+        } else {
+          alert("Este curso tiene inscripciones.");
+        }
+      },
+      error: (error) => console.error(error),
+      complete: () => console.log('Finalizó')
+    });
+
+    hasInscriptions.unsubscribe();
   }
 
   add() {
     let element: Course = {
+      id: '',
       nameCourse: '',
       commission: ""
     }
@@ -101,8 +109,7 @@ export class CoursesTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        this.dataSource.data.push(result);
-        this.tabla.renderRows();
+        this.courseService.addCourse(result);
       }
     });
   }
@@ -117,5 +124,4 @@ export class CoursesTableComponent implements OnInit {
       }
     });
   }
-
 }

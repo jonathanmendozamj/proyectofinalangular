@@ -11,7 +11,7 @@
         </mat-form-field>
 
         <!-- Comisión -->
-        <mat-form-field class="w-100 mb-2" appearance="fill" *ngIf="!this.dialogData?.modify">
+        <mat-form-field class="w-100 mb-2" appearance="fill">
             <mat-label>Comisión</mat-label>
             <input formControlName="commission" matInput>
             <mat-error *ngIf="this.formCourse.get('commission')?.errors?.['required'] && this.formCourse.get('commission')?.touched">Este campo no puede quedar vacío.</mat-error>

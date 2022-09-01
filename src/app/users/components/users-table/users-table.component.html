@@ -18,7 +18,7 @@
         <!-- Columna DNI -->
         <ng-container matColumnDef="Tipo">
             <th mat-header-cell *matHeaderCellDef appFontSize>Tipo</th>
-            <td mat-cell *matCellDef="let element">{{ element.profile }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.isAdmin ? 'Admin' : 'User' }}</td>
         </ng-container>
     
         <!-- Columna Acciones -->

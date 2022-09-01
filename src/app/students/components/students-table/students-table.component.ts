@@ -8,6 +8,7 @@ import { Student } from 'src/app/core/models/student';
 import { Observable } from 'rxjs';
 import { Session } from 'src/app/core/models/session';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 
 export interface DialogDataStudent {
   student: Student;
@@ -29,15 +30,17 @@ export class StudentsTableComponent implements OnInit {
   @ViewChild(MatTable) tabla!: MatTable<Student>;
 
   session$!: Observable<Session>;
+  students$!: Observable<Student[]>;
 
   constructor(private dialog: MatDialog,
     private authService: AuthService,
+    private inscriptionsService: InscriptionsService,
     private studentsService: StudentsService) { 
       
   }
 
   ngOnInit(): void {
-    this.studentsService.getStudents().subscribe({
+    this.studentsService.getAllStudents().subscribe({
       next: (data) => {
         this.LIST_STUDENTS = data as Student[];
         this.dataSource = new MatTableDataSource(this.LIST_STUDENTS);
@@ -65,23 +68,30 @@ export class StudentsTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        const item = this.dataSource.data.find(student => student.dni === result.dni);
-        const index = this.dataSource.data.indexOf(item!);
-
-        if(index >= 0) {
-          this.dataSource.data[index] = result;
-          this.tabla.renderRows();
-        }
+        this.studentsService.modifyStudent(result);
       }
     });
   }
 
   delete(element: Student) {
-    this.dataSource.data = this.dataSource.data.filter(student => student.dni !== element.dni);
+    let hasInscription$ = this.inscriptionsService.hasStudentInscriptions(element.id).subscribe({
+      next: (hasInscriptions: boolean) => {
+        if(!hasInscriptions) {
+          this.studentsService.deleteStudent(element.id);
+        } else {
+          alert("Este estudiante tiene inscripciones.");
+        }
+      },
+      error: (error) => console.error(error),
+      complete: () => console.log('Finalizó')
+    });
+
+    hasInscription$.unsubscribe();
   }
 
   add() {
     let element: Student = {
+      id: '',
       name: '',
       surname: '',
       dni: '',
@@ -99,9 +109,8 @@ export class StudentsTableComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result){
-        this.dataSource.data.push(result);
-        this.tabla.renderRows();
+      if(result) {
+        this.studentsService.addStudent(result);
       }
     });
   }

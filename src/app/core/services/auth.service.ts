@@ -1,76 +1,76 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, Subject, tap, throwError } from 'rxjs';
 import { User } from '../models/user';
 import { Session } from '../models/session';
-import data from './../../../assets/users.json';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+
+const API = environment.api;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  private usersObservable!: Observable<any>;
-  private loginObservable!: Observable<any>;
-
   private sessionSubject!: BehaviorSubject<Session>;
+  private subject!: BehaviorSubject<User[]>;
 
-  constructor() { 
-    this.usersObservable = new Observable<any>((subscriber) => {
-      let users = data;
-
-      subscriber.next(users);
-
-      subscriber.complete();
-
-      if(!Array.isArray(users)) {
-        subscriber.error({
-          code: -1,
-          message: 'No es un array.'
-        });
-      }
-
-      if(users.length === 0){
-        subscriber.error({
-          code: -1,
-          message: 'No hay usuarios disponibles.'
-        });
-      }
-    });
-
+  constructor(private http: HttpClient, private router: Router)  { 
     const session: Session = {
       isActive: false
     };
-    this.sessionSubject = new BehaviorSubject(session);
+
+    this.sessionSubject = new BehaviorSubject<Session>(session);
+    this.subject = new BehaviorSubject<User[]>([]);
   }
 
-  getAllUsers() {
-    return this.usersObservable;
+
+  private readUsers() {
+    this.http.get<User[]>(`${ API }/users`)
+      .pipe(
+        catchError(this.handleError)
+      )
+      .subscribe((users) => {
+        this.subject.next(users);
+      });
   }
 
-  login(loginData: User) {
-    this.loginObservable = new Observable<any>((subscriber) => {
-      let loginUser = data.find(item => item.user === loginData.user && item.password === loginData.password);
+  public getAllUsers(): Observable<User[]>{
+    this.readUsers();
 
-      if(loginUser) {
-        subscriber.next(loginUser);
+    return this.subject;
+  }
 
-        const session: Session = {
-          isActive: true,
-          user: loginUser
-        };
-    
-        this.sessionSubject.next(session);
+  public login(loginData: User) {
+    let loginSubject = new Subject<User>();
+    this.readUsers();
 
-        subscriber.complete();
-      } else {
-        subscriber.error({
-          code: -1,
-          message: 'No puede loguearse.'
-        });
-      }
-    });
+    this.subject
+      .pipe(map((usuarios: User[]) => {
+          return usuarios.filter((item: User) => item.user === loginData.user && item.password === loginData.password)[0];
+        })
+      )
+      .subscribe((user: User) => {
+        if(user) {
+          const session: Session = {
+            isActive: true,
+            user: user
+          };
+      
+          this.sessionSubject.next(session);
 
-    return this.loginObservable;
+          loginSubject.next(user);
+
+          this.router.navigate(['/inicio']);
+        } else {
+          loginSubject.error({
+            code: -1,
+            message: 'No puede loguearse.'
+          });
+        }
+      });
+
+    return loginSubject;
   }
 
   getSession(){
@@ -81,6 +81,19 @@ export class AuthService {
     const session: Session = {
       isActive: false
     };
+
+    console.log(this.sessionSubject);
     this.sessionSubject.next(session);
+    console.log(this.sessionSubject);
+  }
+
+  private handleError(error: HttpErrorResponse){
+    if(error.error instanceof ErrorEvent){
+      console.error('Error del lado del cliente', error.error.message);
+    } else {
+      console.error('Error del lado del servidor', error.status, error.message)
+      alert('Hubo un error de comunicación, intente de nuevo.');
+    }
+    return throwError(() => new Error('Error en la comunicacion HTTP'));
   }
 }

@@ -8,12 +8,13 @@
         </mat-form-field>
 
         <div class="w-100 mb-2" apperance="fill">
-            <mat-label>Tipo usuario</mat-label>
-            <mat-radio-group formControlName="profile">
-                <mat-radio-button value="admin">Administrador</mat-radio-button>
-                <mat-radio-button value="user">Usuario</mat-radio-button>
-            </mat-radio-group>
-            <mat-error *ngIf="this.formUser.get('profile')?.errors?.['required'] && this.formUser.get('profile')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-label>Tipo usuario</mat-label> <br>
+            <mat-slide-toggle
+                formControlName="isAdmin"
+                class="example-margin">
+                Es admin?
+            </mat-slide-toggle>
+            <mat-error *ngIf="this.formUser.get('isAdmin')?.errors?.['required'] && this.formUser.get('isAdmin')?.touched">Este campo no puede quedar vacío.</mat-error>
         </div>
     
         <mat-form-field class="w-100 mb-2" appearance="fill">

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Inscription } from 'src/app/core/models/inscription';
-import { StudentsService } from '../../services/students.service';
+import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 import { DialogDataStudent } from '../students-table/students-table.component';
 
 @Component({
@@ -21,24 +21,25 @@ export class StudentDetailComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<StudentDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public dialogData: DialogDataStudent,
-    private studentService: StudentsService) {
+    private inscriptionsService: InscriptionsService) {
 
-      
     }
 
   ngOnInit(): void {
-    this.studentService.getInscriptions(this.dialogData.student?.dni).subscribe({
-      next: (data) => {
+    let hasInscription = this.inscriptionsService.getInscriptionsForStudent(this.dialogData.student?.id).subscribe({
+      next: (data: Inscription[]) => {
         this.LIST_INSCRIPTIONS = data as Inscription[];
         this.dataSource = new MatTableDataSource(this.LIST_INSCRIPTIONS);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error(error);
       },
       complete: () => {
         console.log('Completado.');
       }
     });
+
+    hasInscription.unsubscribe();
   }
 
   close() {
@@ -46,7 +47,9 @@ export class StudentDetailComponent implements OnInit {
   }
 
   delete(element: Inscription) {
-    this.dataSource.data = this.dataSource.data.filter(inscription => inscription.commission !== element.commission);
+    if(element) {
+      this.inscriptionsService.deleteInscription(element.id);
+    }
   }
 
 }

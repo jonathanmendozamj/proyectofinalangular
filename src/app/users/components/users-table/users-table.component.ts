@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { Observable } from 'rxjs';
 import { User } from 'src/app/core/models/user';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { UsersService } from '../../services/users.service';
 import { UserFormComponent } from '../user-form/user-form.component';
 
 export interface DialogDataUser {
@@ -25,13 +26,15 @@ export class UsersTableComponent implements OnInit {
   dataSource: MatTableDataSource<User> = new MatTableDataSource();
   @ViewChild(MatTable) tabla!: MatTable<User>;
 
-  constructor(private authService: AuthService, 
+  users$!: Observable<User[]>;
+
+  constructor(private usersService: UsersService, 
     private dialog: MatDialog) { 
 
     }
 
   ngOnInit(): void {
-    this.authService.getAllUsers().subscribe({
+    this.usersService.getAllUsers().subscribe({
       next: (data) => {
         this.LIST_USERS = data as User[];
         this.dataSource = new MatTableDataSource(this.LIST_USERS);
@@ -47,9 +50,10 @@ export class UsersTableComponent implements OnInit {
 
   add() {
     let user: User = {
+      id: '',
       user: '',
       password: '',
-      profile: ''
+      isAdmin: false
     }
 
     const dialogRef = this.dialog.open(UserFormComponent, {
@@ -63,8 +67,7 @@ export class UsersTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        this.dataSource.data.push(result);
-        this.tabla.renderRows();
+        this.usersService.addUser(result as User);
       }
     });
   }
@@ -81,15 +84,7 @@ export class UsersTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        const item = this.dataSource.data.find(user => user.user === result.user);
-        const index = this.dataSource.data.indexOf(item!);
-
-        console.log(result);
-
-        if(index >= 0) {
-          this.dataSource.data[index] = result;
-          this.tabla.renderRows();
-        }
+        this.usersService.modifyUser(result as User);
       }
     });
   }

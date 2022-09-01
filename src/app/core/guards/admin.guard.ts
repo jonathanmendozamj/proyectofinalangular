@@ -13,17 +13,20 @@ export class AdminGuard implements CanActivate, CanLoad {
 
   }
 
-  getSession() {
+  isAdmin() {
     return this.authService.getSession().pipe(
       map((session: Session) => {
         console.log(session);
-        if(session.user?.profile === 'admin'){
+        console.log();
+
+        if(session.user?.isAdmin) {
           return true;
-        } else {
-          alert('No tiene permisos de admin.');
-          this.router.navigate(['/inicio']);
-          return false;
-        }
+        } 
+    
+        alert('No tiene permisos de admin.');
+        this.router.navigate(['/inicio']);
+
+        return false;
       })
     );
   }
@@ -31,13 +34,17 @@ export class AdminGuard implements CanActivate, CanLoad {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.getSession();
+    console.log('canActivate AdminGuard');
+    
+    return this.isAdmin();
   }
 
   canLoad(
     route: Route,
     segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.getSession();
+    console.log('canLoad AdminGuard');
+    
+    return this.isAdmin();
   }
   
 }

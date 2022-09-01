@@ -1,5 +1,5 @@
-<div *ngIf="session$ | async as Session">
-    <div *ngIf="Session.isActive">
+<div *ngIf="session$ | async as session">
+    <div *ngIf="session.isActive">
         <p><button mat-button routerLink="inicio">Inicio</button></p>
         <p><button mat-button routerLink="estudiantes/lista">Estudiantes</button></p>
         <p><button mat-button routerLink="cursos/lista">Cursos</button></p>

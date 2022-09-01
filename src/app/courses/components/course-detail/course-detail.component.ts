@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Inscription } from 'src/app/core/models/inscription';
-import { CoursesService } from '../../services/courses.service';
+import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 import { DialogDataCourse } from '../courses-table/courses-table.component';
 
 @Component({
@@ -11,8 +11,6 @@ import { DialogDataCourse } from '../courses-table/courses-table.component';
   styleUrls: ['./course-detail.component.css']
 })
 export class CourseDetailComponent implements OnInit {
-  courseStudents$: Promise<any> | undefined;
-
   displayedColumns: string[] = ['Nombre', 'Acciones'];
   LIST_INSCRIPTIONS: Inscription[] = [];
 
@@ -21,12 +19,12 @@ export class CourseDetailComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<CourseDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public dialogData: DialogDataCourse,
-    private courseService: CoursesService) { 
+    private inscriptionsService: InscriptionsService) { 
 
   }
 
   ngOnInit(): void {
-    this.courseService.getInscriptions(this.dialogData.course?.commission).subscribe({
+    this.inscriptionsService.getInscriptionsForCourse(this.dialogData.course?.id).subscribe({
       next: (data) => {
         this.LIST_INSCRIPTIONS = (data as Inscription[]);
         this.dataSource = new MatTableDataSource(this.LIST_INSCRIPTIONS);
@@ -45,7 +43,9 @@ export class CourseDetailComponent implements OnInit {
   }
 
   delete(element: Inscription) {
-    this.dataSource.data = this.dataSource.data.filter(student => student.dni !== element.dni);
+    if(element) {
+      this.inscriptionsService.deleteInscription(element.id);
+    }
   }
 
 }

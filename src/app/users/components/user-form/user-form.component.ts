@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { User } from 'src/app/core/models/user';
 import { DialogDataUser } from '../users-table/users-table.component';
 
 @Component({
@@ -19,8 +20,9 @@ export class UserFormComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.dialogData);
     this.formUser = this.fb.group({
+      id: [this.dialogData.user?.id],
       user: [this.dialogData.user?.user, [Validators.required]],
-      profile: [this.dialogData.user?.profile, [Validators.required]],
+      isAdmin: [this.dialogData.user?.isAdmin, [Validators.required]],
       password: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required]]
     });
@@ -33,7 +35,12 @@ export class UserFormComponent implements OnInit {
   update() {
     console.log(this.formUser.value);
     if(this.formUser.get('password')?.value === this.formUser.get('confirmPassword')?.value) {
-      this.dialogRef.close(this.formUser.value);
+      let newUser = this.formUser.value;
+      delete newUser.confirmPassword;
+
+      this.dialogRef.close(newUser as User);
+    } else {
+      alert('Las contraseñas no son iguales');
     }
   }
 

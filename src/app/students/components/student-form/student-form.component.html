@@ -18,7 +18,7 @@
         </mat-form-field>
 
         <!-- DNI - Documento Nacional de Identidad -->
-        <mat-form-field class="w-100 mb-2" appearance="fill" *ngIf="!this.dialogData?.modify">
+        <mat-form-field class="w-100 mb-2" appearance="fill">
             <mat-label>DNI</mat-label>
             <input formControlName="dni" matInput>
             <mat-error *ngIf="this.formStudent.get('dni')?.errors?.['required'] && this.formStudent.get('dni')?.touched">Este campo no puede quedar vacío.</mat-error>

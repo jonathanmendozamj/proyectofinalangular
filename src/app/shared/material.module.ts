@@ -10,7 +10,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSelectModule } from "@angular/material/select";
 import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
     imports: [
@@ -24,7 +24,8 @@ import { MatRadioModule } from '@angular/material/radio';
         MatSidenavModule,
         MatSelectModule,
         MatCardModule,
-        MatRadioModule
+        MatRadioModule,
+        MatSlideToggleModule
     ],
     exports: [
         MatTableModule,
@@ -37,7 +38,8 @@ import { MatRadioModule } from '@angular/material/radio';
         MatSidenavModule,
         MatSelectModule,
         MatCardModule,
-        MatRadioModule
+        MatRadioModule,
+        MatSlideToggleModule
     ]
 })
 export class MaterialModule {

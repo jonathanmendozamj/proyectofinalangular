@@ -20,6 +20,7 @@ export class CourseFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.formCourse = this.fb.group({
+      id: [this.dialogData.course?.id],
       nameCourse: [this.dialogData.course?.nameCourse, [Validators.required, Validators.maxLength(80)]],
       commission: [this.dialogData.course?.commission, [Validators.required, Validators.pattern(/^\d+$/), Validators.minLength(4), Validators.maxLength(8)]],
     });

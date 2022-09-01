@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { Observable } from 'rxjs';
 import { Inscription } from 'src/app/core/models/inscription';
 import { InscriptionsService } from '../../services/inscriptions.service';
 import { InscriptionDetailComponent } from '../inscription-detail/inscription-detail.component';
@@ -20,20 +21,20 @@ const WIDTH_DIALOG = '480px';
   styleUrls: ['./inscriptions-table.component.css']
 })
 export class InscriptionsTableComponent implements OnInit {
-
-  inscriptions$: Promise<any> | undefined;
-  displayedColumns: string[] = ['Nombre', 'DNI', 'Curso', 'Comision', 'Acciones'];
+  displayedColumns: string[] = ['ID', 'Nombre', 'DNI', 'Curso', 'Comision', 'Acciones'];
   LIST_INSCRIPTIONS: Inscription[] = [];
   dataSource: MatTableDataSource<Inscription> = new MatTableDataSource();
   @ViewChild(MatTable) tabla!: MatTable<Inscription>;
+
+  inscriptions$!: Observable<Inscription[]>;
 
   constructor(private inscriptionService: InscriptionsService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.inscriptionService.getInscriptions().subscribe({
-        next: (data) => {
-          this.LIST_INSCRIPTIONS = data as Inscription[];
+    this.inscriptionService.getAllInscriptions().subscribe({
+        next: (data: Inscription[]) => {
+          this.LIST_INSCRIPTIONS = data;
           this.dataSource = new MatTableDataSource(this.LIST_INSCRIPTIONS);
         },
         error: (error) => {
@@ -44,6 +45,8 @@ export class InscriptionsTableComponent implements OnInit {
         }
       }
     );
+
+    this.inscriptions$ = this.inscriptionService.getAllInscriptions();
   }
 
   add() {
@@ -66,14 +69,18 @@ export class InscriptionsTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
+        let existsInscription = this.inscriptionService.existsInscription(result.idCourse, result.idStudent).subscribe({
+          next: (existsInscription) => {
+            if(!existsInscription) {
+              this.inscriptionService.addInscription(result);
+            } else {
+              alert("Ya existe esta inscripción.");
+            }
+          },
+          error: (error) => console.error(error)
+        });
 
-        const item = this.dataSource.data.find(inscription => (inscription.dni === result.dni) && (inscription.commission === result.commission));
-        const index = this.dataSource.data.indexOf(item!);
-
-        if(index < 0) {
-          this.dataSource.data.push(result);
-          this.tabla.renderRows();
-        }
+        existsInscription.unsubscribe();
       }
     });
   }
@@ -101,22 +108,15 @@ export class InscriptionsTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        const item = this.dataSource.data.find(inscription => (inscription.dni === element.dni) && (inscription.commission === element.commission));
-        const index = this.dataSource.data.indexOf(item!);
-
-        const itemResult = this.dataSource.data.find(inscription => (inscription.dni === result.dni) && (inscription.commission === result.commission));
-        const indexResult = this.dataSource.data.indexOf(itemResult!);
-
-        if(index >= 0 && indexResult < 0) {
-          this.dataSource.data[index] = result;
-          this.tabla.renderRows();
-        }
+        this.inscriptionService.modifyInscription(result);
       }
     });
   }
 
   delete(element: Inscription) {
-    this.dataSource.data = this.dataSource.data.filter(inscription => (inscription.dni !== element.dni || inscription.commission !== element.commission));
+    if(element) {
+      this.inscriptionService.deleteInscription(element.id);
+    }
   }
 
 }

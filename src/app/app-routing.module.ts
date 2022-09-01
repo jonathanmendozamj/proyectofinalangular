@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './core/components/home/home.component';
-import { NoPageFoundComponent } from './core/components/no-page-found/no-page-found.component';
 import { AdminGuard } from './core/guards/admin.guard';
 import { AuthGuard } from './core/guards/auth.guard';
 
@@ -9,7 +8,8 @@ const routes: Routes = [
 	{
 		path: 'inicio',
 		component: HomeComponent,
-		canActivate: [AuthGuard]
+		canActivate: [AuthGuard],
+		canLoad: [AuthGuard]
 	},
 	{
 		path: 'cursos',
@@ -37,7 +37,7 @@ const routes: Routes = [
 	},
 	{
 		path: '',
-		redirectTo: 'inicio',
+		redirectTo: '/inicio',
 		pathMatch: 'full'
 	},
 	/*{
