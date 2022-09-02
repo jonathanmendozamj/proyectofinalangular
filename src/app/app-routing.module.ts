@@ -8,8 +8,7 @@ const routes: Routes = [
 	{
 		path: 'inicio',
 		component: HomeComponent,
-		canActivate: [AuthGuard],
-		canLoad: [AuthGuard]
+		canActivate: [AuthGuard]
 	},
 	{
 		path: 'cursos',
