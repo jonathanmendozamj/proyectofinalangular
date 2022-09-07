@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { User } from 'src/app/core/models/user';
+import { User } from 'src/app/core/models/user.model';
 import { DialogDataUser } from '../users-table/users-table.component';
 
 @Component({

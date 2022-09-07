@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import { map, Observable } from 'rxjs';
-import { Session } from '../models/session';
+import { Session } from '../models/session.model';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
@@ -22,7 +22,6 @@ export class AuthGuard implements CanActivate, CanLoad {
           if(session.isActive){
             return true;
           } else {
-            alert('Debe hacer inicio de sesion.');
             this.router.navigate(['/login']);
             return false;
           }

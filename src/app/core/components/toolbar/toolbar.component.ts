@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { Session } from './../../models/session';
+import { Session } from '../../models/session.model';
 
 @Component({
   selector: 'app-toolbar',

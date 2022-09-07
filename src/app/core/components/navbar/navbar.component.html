@@ -1,5 +1,8 @@
 <mat-toolbar color="primary" class="d-flex justify-content-between">
-    <span>Proyecto Final Angular - Coderhouse</span>
+    <span>
+        <ng-container>PF Angular</ng-container>
+        <ng-container *ngIf="getTitle()"> - {{ getTitle() }}</ng-container>
+    </span>
     <div *ngIf="session$ | async as session">
         <div *ngIf="session.isActive">
             <h6>{{ session.user?.user }} - {{ ((session.user?.isAdmin) ? 'Admin' : 'User') }}</h6>

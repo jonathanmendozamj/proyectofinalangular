@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
-import { User } from 'src/app/core/models/user';
+import { Session } from 'src/app/core/models/session.model';
+import { User } from 'src/app/core/models/user.model';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { UsersService } from '../../services/users.service';
 import { UserFormComponent } from '../user-form/user-form.component';
 
@@ -27,8 +29,10 @@ export class UsersTableComponent implements OnInit {
   @ViewChild(MatTable) tabla!: MatTable<User>;
 
   users$!: Observable<User[]>;
+  session$!: Observable<Session>;
 
   constructor(private usersService: UsersService, 
+    private authService: AuthService,
     private dialog: MatDialog) { 
 
     }
@@ -46,6 +50,8 @@ export class UsersTableComponent implements OnInit {
         console.log('Completado.');
       }
     });
+
+    this.session$ = this.authService.getSession();
   }
 
   add() {
@@ -87,6 +93,16 @@ export class UsersTableComponent implements OnInit {
         this.usersService.modifyUser(result as User);
       }
     });
+  }
+
+  delete(element: User)  {
+    if(!confirm(`¿Desea eliminar el usuario ${ element.user }?`)) {
+      return;
+    }
+
+    if(element) {
+      this.usersService.deleteUser(element);
+    }
   }
 
 }

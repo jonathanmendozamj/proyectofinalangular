@@ -2,12 +2,12 @@
 <div mat-dialog-content >
     <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
         <label>Nombre</label>
-        <label class="font-weight-bold text-right">{{ this.dialogData.course.nameCourse || '' }}</label>
+        <label id="labelName" class="font-weight-bold text-right">{{ this.dialogData.course.nameCourse || '' }}</label>
     </div>
 
     <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
         <label>Comisión</label>
-        <label class="font-weight-bold text-right">{{ this.dialogData.course.commission || ''}}</label>
+        <label id="labelCommission" class="font-weight-bold text-right">{{ this.dialogData.course.commission || ''}}</label>
     </div>
 </div>
 
@@ -36,5 +36,5 @@
 
 
 <div mat-dialog-actions>
-    <button mat-button (click)="close()">Cerrar</button>
+    <button id="btnClose" mat-button (click)="close()">Cerrar</button>
 </div>

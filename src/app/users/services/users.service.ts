@@ -1,7 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
-import { User } from 'src/app/core/models/user';
+import { BehaviorSubject, catchError } from 'rxjs';
+import { User } from 'src/app/core/models/user.model';
+import { handleError } from 'src/app/shared/functions/handle-error';
 import { environment } from 'src/environments/environment';
 
 const API = environment.api;
@@ -20,7 +21,7 @@ export class UsersService {
   private readUsers() {
     this.http.get<User[]>(`${ API }/users`)
       .pipe(
-        catchError(this.handleError)
+        catchError(handleError)
       )
       .subscribe((users: User[]) => {
         this.subject.next(users);
@@ -47,13 +48,10 @@ export class UsersService {
     });
   }
 
-  private handleError(error: HttpErrorResponse){
-    if(error.error instanceof ErrorEvent){
-      console.error('Error del lado del cliente', error.error.message);
-    } else {
-      console.error('Error del lado del servidor', error.status, error.message)
-      alert('Hubo un error de comunicación, intente de nuevo.');
-    }
-    return throwError(() => new Error('Error en la comunicacion HTTP'));
+  deleteUser(user: User) {
+    this.http.delete<User>(`${ API }/users/${ user.id }`).subscribe((deletedUser) => {
+      alert(`${ deletedUser.id } - ${ deletedUser.user } fue eliminado satisfactoriamente.`);
+      this.readUsers();
+    });
   }
 }

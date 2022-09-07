@@ -1,7 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
-import { Course } from 'src/app/core/models/course';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, catchError, switchMap, tap } from 'rxjs';
+import { Course } from 'src/app/core/models/course.model';
+import { handleError } from 'src/app/shared/functions/handle-error';
 import { environment } from 'src/environments/environment';
 
 const API = environment.api;
@@ -19,11 +20,19 @@ export class CoursesService {
   private readCourses() {
     this.http.get<Course[]>(`${ API }/courses`)
       .pipe(
-        catchError(this.handleError)
+        catchError(handleError)
       )
       .subscribe((courses) => {
         this.subject.next(courses);
       });
+  }
+
+  private getAllCoursesObservable() {
+    return this.http.get<Course[]>(`${ API }/courses`)
+      .pipe(
+        catchError(handleError),
+        tap(courses => this.subject.next(courses)),
+      )
   }
 
   getAllCourses() {
@@ -36,33 +45,26 @@ export class CoursesService {
   }
 
   addCourse(course: Course) {
-    return this.http.post<Course>(`${ API }/courses`, course).subscribe((course) => {
-      alert(`${ course.id } - ${ course.nameCourse } fue agregado satisfactoriamente.`);
-      this.readCourses();
-    });
+    return this.http.post<Course>(`${ API }/courses`, course)
+      .subscribe((newCourse) => {
+        alert(`${ newCourse.id } - ${ newCourse.nameCourse } fue agregado satisfactoriamente.`);
+        this.readCourses();
+      });
   }
 
   modifyCourse(course: Course) {
-    this.http.put<Course>(`${ API }/courses/${ course.id }`, course).subscribe((course) => {
-      alert(`${course.id} - ${ course.nameCourse } fue editado satisfactoriamente.`);
-      this.readCourses();
-    });
+    return this.http.put<Course>(`${ API }/courses/${ course.id }`, course)
+      .subscribe((modifiedCourse) => {
+        alert(`${ modifiedCourse.id } - ${ modifiedCourse.nameCourse } fue editado satisfactoriamente.`);
+        this.readCourses();
+      });
   }
 
   deleteCourse(id: String) {
-    this.http.delete<Course>(`${ API }/courses/${id}`).subscribe((course) => {
-      alert(`${ course.id } - ${ course.nameCourse } fue eliminado satisfactoriamente.`);
-      this.readCourses();
-    });
-  }
-
-  private handleError(error: HttpErrorResponse){
-    if(error.error instanceof ErrorEvent){
-      console.error('Error del lado del cliente', error.error.message);
-    } else {
-      console.error('Error del lado del servidor', error.status, error.message)
-      alert('Hubo un error de comunicación, intente de nuevo.');
-    }
-    return throwError(() => new Error('Error en la comunicacion HTTP'));
+    return this.http.delete<Course>(`${ API }/courses/${ id }`)
+      .subscribe((deletedCourse) => {
+        alert(`${ deletedCourse.id } - ${ deletedCourse.nameCourse } fue eliminado satisfactoriamente.`);
+        this.readCourses();
+      });
   }
 }

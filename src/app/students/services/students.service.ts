@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Student } from 'src/app/core/models/student';
+import { Student } from 'src/app/core/models/student.model';
 import { environment } from 'src/environments/environment';
+import { handleError } from 'src/app/shared/functions/handle-error';
 
 const API = environment.api;
 
@@ -22,7 +23,7 @@ export class StudentsService {
   private readStudents() {
     this.http.get<Student[]>(`${ API }/students`)
       .pipe(
-        catchError(this.handleError)
+        catchError(handleError)
       )
       .subscribe((students) => {
         this.subject.next(students);
@@ -39,34 +40,24 @@ export class StudentsService {
   }
 
   addStudent(student: Student) {
-    return this.http.post<Student>(`${ API }/students`, student).subscribe((student) => {
-      alert(`${ student.id } - ${ student.name } fue agregado satisfactoriamente.`);
+    return this.http.post<Student>(`${ API }/students`, student).subscribe((newStudent) => {
+      alert(`${ newStudent.id } - ${ newStudent.name } fue agregado satisfactoriamente.`);
       this.readStudents();
     });
   }
 
   modifyStudent(student: Student) {
-    this.http.put<Student>(`${ API }/students/${ student.id }`, student).subscribe((newStudent) => {
-      alert(`${newStudent.id} - ${ newStudent.name } fue editado satisfactoriamente.`);
+    this.http.put<Student>(`${ API }/students/${ student.id }`, student).subscribe((modifiedStudent) => {
+      alert(`${ modifiedStudent.id } - ${ modifiedStudent.name } fue editado satisfactoriamente.`);
       this.readStudents();
     });
   }
 
   deleteStudent(id: String) {
-    this.http.delete<Student>(`${ API }/students/${id}`).subscribe((student) => {
-      alert(`${ student.id } - ${ student.name } fue eliminado satisfactoriamente.`);
+    this.http.delete<Student>(`${ API }/students/${ id }`).subscribe((deletedStudent) => {
+      alert(`${ deletedStudent.id } - ${ deletedStudent.name } fue eliminado satisfactoriamente.`);
       this.readStudents();
     });
-  }
-
-  private handleError(error: HttpErrorResponse){
-    if(error.error instanceof ErrorEvent){
-      console.error('Error del lado del cliente', error.error.message);
-    } else {
-      console.error('Error del lado del servidor', error.status, error.message)
-      alert('Hubo un error de comunicación, intente de nuevo.');
-    }
-    return throwError(() => new Error('Error en la comunicacion HTTP'));
   }
 }
 

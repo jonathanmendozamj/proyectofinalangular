@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Session } from '../../models/session';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
+import { filter, map, Observable } from 'rxjs';
+import { Session } from '../../models/session.model';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -12,11 +14,41 @@ export class NavbarComponent implements OnInit {
 
   session$!: Observable<Session>;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, 
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private title: Title) { }
 
   ngOnInit(): void {
     this.session$ = this.authService.getSession();
     console.log(this.session$);
   }
 
+  setPageTitle() {
+    let defaultPageTitle = '';
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => {
+        let child = this.activatedRoute.firstChild;
+  
+        if (!child) {
+          return this.activatedRoute.snapshot.data['title'] || defaultPageTitle;
+        }
+  
+        while (child.firstChild) {
+          child = child.firstChild;
+        }
+  
+        if (child.snapshot.data['title']) {
+          return child.snapshot.data['title'] || defaultPageTitle;
+        }
+      })
+    )
+    .subscribe((title: string) => this.title.setTitle(title));
+  }
+
+  getTitle() {
+    return this.title.getTitle();
+  }
 }

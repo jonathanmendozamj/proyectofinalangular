@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
-import { Inscription } from 'src/app/core/models/inscription';
+import { Inscription } from 'src/app/core/models/inscription.model';
+import { Session } from 'src/app/core/models/session.model';
+import { AuthService } from 'src/app/core/services/auth.service';
 import { InscriptionsService } from '../../services/inscriptions.service';
 import { InscriptionDetailComponent } from '../inscription-detail/inscription-detail.component';
 import { InscriptionFormComponent } from '../inscription-form/inscription-form.component';
@@ -27,8 +29,10 @@ export class InscriptionsTableComponent implements OnInit {
   @ViewChild(MatTable) tabla!: MatTable<Inscription>;
 
   inscriptions$!: Observable<Inscription[]>;
+  session$!: Observable<Session>;
 
   constructor(private inscriptionService: InscriptionsService,
+    private authService: AuthService,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -47,6 +51,7 @@ export class InscriptionsTableComponent implements OnInit {
     );
 
     this.inscriptions$ = this.inscriptionService.getAllInscriptions();
+    this.session$ = this.authService.getSession();
   }
 
   add() {

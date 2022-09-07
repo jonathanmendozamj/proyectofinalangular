@@ -28,6 +28,11 @@
                 <button mat-icon-button (click)="edit(element)">
                     <mat-icon>edit</mat-icon>
                 </button>
+                <ng-container *ngIf="session$ | async as session">
+                    <button *ngIf="element.id !== session.user?.id" mat-icon-button (click)="delete(element)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </ng-container>
             </td>
         </ng-container>
     

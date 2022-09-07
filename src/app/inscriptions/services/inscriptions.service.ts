@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
-import { Inscription } from 'src/app/core/models/inscription';
+import { Inscription } from 'src/app/core/models/inscription.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CoursesService } from 'src/app/courses/services/courses.service';
 import { StudentsService } from 'src/app/students/services/students.service';
-import { Course } from 'src/app/core/models/course';
-import { Student } from 'src/app/core/models/student';
+import { Course } from 'src/app/core/models/course.model';
+import { Student } from 'src/app/core/models/student.model';
+import { handleError } from 'src/app/shared/functions/handle-error';
 
 const API = environment.api;
 
@@ -28,10 +29,10 @@ export class InscriptionsService {
 
   private readInscriptions() {
     this.coursesService.getAllCourses().subscribe({
-      next: (courses) => {
+      next: (courses: Course[]) => {
         this.courses = courses;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error(error);
       },
       complete: () => {
@@ -53,7 +54,7 @@ export class InscriptionsService {
 
     this.http.get<Inscription[]>(`${ API }/inscriptions`)
       .pipe(
-        catchError(this.handleError)
+        catchError(handleError)
       )
       .subscribe((inscriptions) => {
         let inscriptionsData = inscriptions.map(item => {
@@ -116,33 +117,23 @@ export class InscriptionsService {
   }
 
   addInscription(inscription: Inscription) {
-    return this.http.post<Inscription>(`${ API }/inscriptions`, inscription).subscribe((inscription) => {
-      alert(`${ inscription.id } - ${ inscription.idCourse } fue agregado satisfactoriamente.`);
+    return this.http.post<Inscription>(`${ API }/inscriptions`, inscription).subscribe((newInscription) => {
+      alert(`${ newInscription.id } - ${ newInscription.idCourse } fue agregado satisfactoriamente.`);
       this.readInscriptions();
     });
   }
 
   modifyInscription(inscription: Inscription) {
-    this.http.put<Inscription>(`${ API }/inscriptions/${ inscription.id }`, inscription).subscribe((inscription) => {
-      alert(`${inscription.id} - ${ inscription.nameCourse } fue editado satisfactoriamente.`);
+    this.http.put<Inscription>(`${ API }/inscriptions/${ inscription.id }`, inscription).subscribe((modifiedInscription) => {
+      alert(`${ modifiedInscription.id } - ${ modifiedInscription.nameCourse } fue editado satisfactoriamente.`);
       this.readInscriptions();
     });
   }
 
   deleteInscription(id: String) {
-    this.http.delete<Inscription>(`${ API }/inscriptions/${ id }`).subscribe((inscription) => {
-      alert(`${ inscription.id } - ${ inscription.idCourse } - ${ inscription.idStudent } fue eliminado satisfactoriamente.`);
+    this.http.delete<Inscription>(`${ API }/inscriptions/${ id }`).subscribe((deletedInscription) => {
+      alert(`${ deletedInscription.id } - ${ deletedInscription.idCourse } - ${ deletedInscription.idStudent } fue eliminado satisfactoriamente.`);
       this.readInscriptions();
     });
-  }
-
-  private handleError(error: HttpErrorResponse){
-    if(error.error instanceof ErrorEvent){
-      console.error('Error del lado del cliente', error.error.message);
-    } else {
-      console.error('Error del lado del servidor', error.status, error.message)
-      alert('Hubo un error de comunicación, intente de nuevo.');
-    }
-    return throwError(() => new Error('Error en la comunicacion HTTP'));
   }
 }

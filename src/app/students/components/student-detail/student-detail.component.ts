@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { Inscription } from 'src/app/core/models/inscription';
+import { Inscription } from 'src/app/core/models/inscription.model';
 import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 import { DialogDataStudent } from '../students-table/students-table.component';
 

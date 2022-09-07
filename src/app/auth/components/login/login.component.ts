@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { User } from 'src/app/core/models/user';
+import { User } from 'src/app/core/models/user.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
@@ -18,15 +18,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private router: Router,
     private authService: AuthService) { 
-      console.log('Constructor LoginComponent');
-    }
+      
+  }
 
   ngOnDestroy(): void {
     
   }
 
   ngOnInit(): void {
-    console.log('ngOnInit LoginComponent');
     this.formLogin = this.fb.group({
       user: ['', [Validators.required]],
       password: ['', [Validators.required]],

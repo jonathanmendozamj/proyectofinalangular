@@ -23,6 +23,6 @@
 </div>
 
 <div mat-dialog-actions>
-    <button mat-button (click)="close()">Cerrar</button>
-    <button mat-button (click)="update()" [disabled]="!this.formCourse.valid">Guardar</button>
+    <button mat-button id="btnClose" (click)="close()" >Cerrar</button>
+    <button mat-button id="btnSubmit" (click)="update()" [disabled]="!this.formCourse.valid">Guardar</button>
 </div>

@@ -1,5 +1,7 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 
+const defaultFontSize = '20px';
+
 @Directive({
   selector: '[appFontSize]'
 })
@@ -11,7 +13,7 @@ export class FontSizeDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    this.element.nativeElement.style.fontSize = (this.fontSize || '20px');
+    this.element.nativeElement.style.fontSize = (this.fontSize || defaultFontSize);
   }
 
 }

@@ -5,8 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InscriptionDetailComponent } from '../inscription-detail/inscription-detail.component';
 import { StudentsService } from 'src/app/students/services/students.service';
 import { CoursesService } from 'src/app/courses/services/courses.service';
-import { Student } from 'src/app/core/models/student';
-import { Course } from 'src/app/core/models/course';
+import { Student } from 'src/app/core/models/student.model';
+import { Course } from 'src/app/core/models/course.model';
 
 @Component({
   selector: 'app-inscription-form',

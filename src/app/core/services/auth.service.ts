@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
-import { User } from '../models/user';
-import { Session } from '../models/session';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, catchError, map, Observable } from 'rxjs';
+import { User } from '../models/user.model';
+import { Session } from '../models/session.model';
+import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
+import { handleError } from 'src/app/shared/functions/handle-error';
 
 const API = environment.api;
 
@@ -27,7 +27,7 @@ export class AuthService {
   private readUsers() {
     this.http.get<User[]>(`${ API }/users`)
       .pipe(
-        catchError(this.handleError)
+        catchError(handleError)
       )
       .subscribe((users) => {
         this.subject.next(users);
@@ -68,18 +68,6 @@ export class AuthService {
       isActive: false
     };
 
-    console.log(this.sessionSubject);
     this.sessionSubject.next(session);
-    console.log(this.sessionSubject);
-  }
-
-  private handleError(error: HttpErrorResponse){
-    if(error.error instanceof ErrorEvent){
-      console.error('Error del lado del cliente', error.error.message);
-    } else {
-      console.error('Error del lado del servidor', error.status, error.message)
-      alert('Hubo un error de comunicación, intente de nuevo.');
-    }
-    return throwError(() => new Error('Error en la comunicacion HTTP'));
   }
 }

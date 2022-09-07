@@ -1,9 +1,13 @@
 <div class="d-flex justify-content-between mb-3">
     <h1 class="align-middle">Tabla de estudiantes</h1>
-    <button class="align-middle" color="primary" mat-raised-button (click)="add()">
-        <mat-icon>person_add</mat-icon>
-        Agregar estudiante
-    </button>
+    <div *ngIf="session$ | async as session">
+        <div *ngIf="session.user?.isAdmin">
+            <button class="align-middle" color="primary" mat-raised-button (click)="add()">
+                <mat-icon>person_add</mat-icon>
+                Agregar estudiante
+            </button>
+        </div>
+    </div>
 </div>
 
 <div *ngIf="this.dataSource.data.length > 0">

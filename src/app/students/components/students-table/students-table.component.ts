@@ -4,9 +4,9 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { StudentsService } from './../../services/students.service';
 import { StudentFormComponent } from '../student-form/student-form.component';
 import { StudentDetailComponent } from '../student-detail/student-detail.component';
-import { Student } from 'src/app/core/models/student';
+import { Student } from 'src/app/core/models/student.model';
 import { Observable } from 'rxjs';
-import { Session } from 'src/app/core/models/session';
+import { Session } from 'src/app/core/models/session.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 
@@ -74,6 +74,10 @@ export class StudentsTableComponent implements OnInit {
   }
 
   delete(element: Student) {
+    if(!confirm(`Desea eliminar al estudiante ${ element.name } ${ element.surname }?`)) {
+      return;
+    }
+    
     let hasInscription$ = this.inscriptionsService.hasStudentInscriptions(element.id).subscribe({
       next: (hasInscriptions: boolean) => {
         if(!hasInscriptions) {

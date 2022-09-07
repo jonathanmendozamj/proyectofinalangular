@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
-import { Course } from 'src/app/core/models/course';
-import { Session } from 'src/app/core/models/session';
+import { Course } from 'src/app/core/models/course.model';
+import { Session } from 'src/app/core/models/session.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 import { CoursesService } from '../../services/courses.service';
@@ -41,13 +41,13 @@ export class CoursesTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.courseService.getAllCourses().subscribe({
-      next: (data) => {
-        this.LIST_COURSES = data as Course[];
+      next: (data: Course[]) => {
+        this.LIST_COURSES = data;
 
         console.log(this.LIST_COURSES);
         this.dataSource = new MatTableDataSource(this.LIST_COURSES);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error(error);
       },
       complete: () => {
@@ -76,17 +76,22 @@ export class CoursesTableComponent implements OnInit {
   }
 
   delete(element: Course) {
-    let hasInscriptions = this.inscriptionService.hasCourseInscriptions(element.id).subscribe({
-      next: (hasInscriptions) => {
-        if(!hasInscriptions) {
-          this.courseService.deleteCourse(element.id);
-        } else {
-          alert("Este curso tiene inscripciones.");
-        }
-      },
-      error: (error) => console.error(error),
-      complete: () => console.log('Finalizó')
-    });
+    if(!confirm(`Desea eliminar el curso ${ element.nameCourse }?`)) {
+      return;
+    }
+
+    let hasInscriptions = this.inscriptionService.hasCourseInscriptions(element.id)
+      .subscribe({
+        next: (hasInscriptions) => {
+          if(!hasInscriptions) {
+            this.courseService.deleteCourse(element.id);
+          } else {
+            alert("Este curso tiene inscripciones.");
+          }
+        },
+        error: (error) => console.error(error),
+        complete: () => console.log('Finalizó')
+      });
 
     hasInscriptions.unsubscribe();
   }
@@ -101,7 +106,7 @@ export class CoursesTableComponent implements OnInit {
     const dialogRef = this.dialog.open(CourseFormComponent, {
       width: WIDTH_DIALOG,
       data: {
-        student: element,
+        course: element,
         title: 'Agregar nuevo curso',
         modify: false
       }
