@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DialogDataInscription } from '../inscriptions-table/inscriptions-table.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InscriptionDetailComponent } from '../inscription-detail/inscription-detail.component';
 import { StudentsService } from 'src/app/students/services/students.service';
 import { CoursesService } from 'src/app/courses/services/courses.service';
 import { Student } from 'src/app/core/models/student.model';
 import { Course } from 'src/app/core/models/course.model';
+import { DialogDataInscription } from 'src/app/core/interfaces/dialog-data-inscription';
 
 @Component({
   selector: 'app-inscription-form',

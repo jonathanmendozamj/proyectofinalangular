@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
+import { DialogDataCourse } from 'src/app/core/interfaces/dialog-data-course';
 import { Inscription } from 'src/app/core/models/inscription.model';
 import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
-import { DialogDataCourse } from '../courses-table/courses-table.component';
 
 @Component({
   selector: 'app-course-detail',
@@ -18,6 +19,7 @@ export class CourseDetailComponent implements OnInit {
   @ViewChild(MatTable) tabla!: MatTable<Inscription>;
 
   constructor(private dialogRef: MatDialogRef<CourseDetailComponent>,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public dialogData: DialogDataCourse,
     private inscriptionsService: InscriptionsService) { 
 
@@ -44,9 +46,23 @@ export class CourseDetailComponent implements OnInit {
   }
 
   delete(element: Inscription) {
-    if(element) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `¿Desea eliminar la inscripción del estudiante ${ element.name } ${ element.surname }?`,
+        buttonText: {
+          ok: 'Aceptar',
+          cancel: 'Cancelar'
+        }
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(!element) {
+        return;
+      }
+
       this.inscriptionsService.deleteInscription(element.id);
-    }
+    });
   }
 
 }

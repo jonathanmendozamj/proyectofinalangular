@@ -11,6 +11,10 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSortModule } from '@angular/material/sort';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
     imports: [
@@ -25,7 +29,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         MatSelectModule,
         MatCardModule,
         MatRadioModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
+        MatSortModule,
+        MatListModule
     ],
     exports: [
         MatTableModule,
@@ -39,7 +47,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
         MatSelectModule,
         MatCardModule,
         MatRadioModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
+        MatSortModule,
+        MatListModule
     ]
 })
 export class MaterialModule {

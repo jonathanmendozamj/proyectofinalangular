@@ -35,6 +35,13 @@ export class StudentsService {
     return this.subject;
   }
 
+  getAllStudentsNew() {
+    return this.http.get<Student[]>(`${ API }/students`)
+    .pipe(
+      catchError(handleError)
+    );
+  }
+
   getStudent(id: String) {
     return this.http.get<Student>(`${ API }/students/${ id }`);
   }

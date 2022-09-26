@@ -1,0 +1,7 @@
+<h1 class="align-middle">Tabla de usuarios</h1>
+<div>
+    <div class="d-flex justify-content-center align-items-middle" *ngIf="(loading$ | async)">
+        <mat-spinner></mat-spinner>
+    </div>
+    <app-users-table *ngIf="!(loading$ | async)"></app-users-table>
+</div>

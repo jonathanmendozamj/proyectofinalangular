@@ -9,14 +9,12 @@ import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.
 import { CoursesService } from '../../services/courses.service';
 import { CourseDetailComponent } from '../course-detail/course-detail.component';
 import { CourseFormComponent } from '../course-form/course-form.component';
-
-export interface DialogDataCourse {
-  course: Course;
-  title: string;
-  modify: boolean;
-}
-
-const WIDTH_DIALOG = '480px';
+import { WIDTH_DIALOG } from 'src/app/shared/consts/consts';
+import { Store } from '@ngrx/store';
+import { CourseState } from 'src/app/core/models/course.state';
+import { selectorLoadedCourses } from '../../states/selectors/courses.selector';
+import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
+import * as CoursesAction from '../../states/actions/courses.action';
 
 @Component({
   selector: 'app-courses-table',
@@ -31,16 +29,20 @@ export class CoursesTableComponent implements OnInit {
   @ViewChild(MatTable) tabla!: MatTable<Course>;
 
   session$!: Observable<Session>;
+  courses$!: Observable<Course[]>;
 
   constructor(private dialog: MatDialog,
     private authService: AuthService,
     private inscriptionService: InscriptionsService,
+    private coursesStore: Store<CourseState>,
     private courseService: CoursesService) { 
     
   }
 
   ngOnInit(): void {
-    this.courseService.getAllCourses().subscribe({
+    this.courses$ = this.coursesStore.select(selectorLoadedCourses);
+    
+    this.courses$.subscribe({
       next: (data: Course[]) => {
         this.LIST_COURSES = data;
 
@@ -76,24 +78,37 @@ export class CoursesTableComponent implements OnInit {
   }
 
   delete(element: Course) {
-    if(!confirm(`Desea eliminar el curso ${ element.nameCourse }?`)) {
-      return;
-    }
 
-    let hasInscriptions = this.inscriptionService.hasCourseInscriptions(element.id)
-      .subscribe({
-        next: (hasInscriptions) => {
-          if(!hasInscriptions) {
-            this.courseService.deleteCourse(element.id);
-          } else {
-            alert("Este curso tiene inscripciones.");
-          }
-        },
-        error: (error) => console.error(error),
-        complete: () => console.log('Finalizó')
-      });
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `¿Desea eliminar el curso ${ element.nameCourse }?`,
+        buttonText: {
+          ok: 'Aceptar',
+          cancel: 'Cancelar'
+        }
+      },
+    });
 
-    hasInscriptions.unsubscribe();
+    dialogRef.afterClosed().subscribe(result => {
+      if(!result) {
+        return;
+      }
+
+      let hasInscriptions = this.inscriptionService.hasCourseInscriptions(element.id)
+        .subscribe({
+          next: (hasInscriptions) => {
+            if(!hasInscriptions) {
+              this.courseService.deleteCourse(element.id);
+            } else {
+              alert("Este curso tiene inscripciones.");
+            }
+          },
+          error: (error) => console.error(error),
+          complete: () => console.log('Finalizó')
+        });
+
+      hasInscriptions.unsubscribe();
+    });
   }
 
   add() {

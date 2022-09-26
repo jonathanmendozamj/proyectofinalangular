@@ -8,12 +8,14 @@ import { StudentsRoutingModule } from './students-routing.module';
 import { StudentDetailComponent } from './components/student-detail/student-detail.component';
 import { SharedModule } from '../shared/shared.module';
 import { InscriptionsService } from '../inscriptions/services/inscriptions.service';
+import { StudentsContainerComponent } from './components/students-container/students-container.component';
 
 @NgModule({
   declarations: [
     StudentFormComponent,
     StudentsTableComponent,
-    StudentDetailComponent
+    StudentDetailComponent,
+    StudentsContainerComponent
   ],
   imports: [
     CommonModule,

@@ -15,6 +15,13 @@ import { InscriptionsModule } from './inscriptions/inscriptions.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './core/services/auth.service';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { environment } from 'src/environments/environment';
+
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { ROOT_REDUCERS } from './core/states/app.state';
+import { ConfirmationDialogComponent } from './core/components/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +30,8 @@ import { AuthService } from './core/services/auth.service';
     ToolbarComponent,
     FooterComponent,
     NoPageFoundComponent,
-    HomeComponent
+    HomeComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +42,10 @@ import { AuthService } from './core/services/auth.service';
     AuthModule,
     UsersModule,
     BrowserAnimationsModule,
-    SharedModule
+    SharedModule,
+    StoreModule.forRoot(ROOT_REDUCERS),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    EffectsModule.forRoot([])
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

@@ -1,10 +1,30 @@
 <div *ngIf="session$ | async as session">
     <div *ngIf="session.isActive">
-        <p><button mat-button routerLink="inicio">Inicio</button></p>
-        <p><button mat-button routerLink="estudiantes/lista">Estudiantes</button></p>
-        <p><button mat-button routerLink="cursos/lista">Cursos</button></p>
-        <p><button mat-button routerLink="inscripciones/lista">Inscripciones</button></p>
-        <p><button mat-button routerLink="usuarios/lista">Usuarios</button></p>
-        <p><button mat-button (click)="logout()">Cerrar Sesión</button></p>
+        <mat-nav-list>
+            <mat-list-item routerLink="inicio">
+                <mat-icon color="primary" mat-list-icon>home</mat-icon>
+                <div mat-line>Inicio</div>
+            </mat-list-item>
+            <mat-list-item routerLink="estudiantes/lista">
+                <mat-icon color="primary" mat-list-icon>person</mat-icon>
+                <div mat-line>Estudiantes</div>
+            </mat-list-item>
+            <mat-list-item routerLink="cursos/lista">
+                <mat-icon color="primary" mat-list-icon>assignment</mat-icon>
+                <div mat-line>Cursos</div>
+            </mat-list-item>
+            <mat-list-item routerLink="inscripciones/lista">
+                <mat-icon color="primary" mat-list-icon>note_alt</mat-icon>
+                <div mat-line>Inscripciones</div>
+            </mat-list-item>
+            <mat-list-item routerLink="usuarios/lista">
+                <mat-icon color="primary" mat-list-icon>account_circle</mat-icon>
+                <div mat-line>Usuarios</div>
+            </mat-list-item>
+            <mat-list-item (click)="logout()">
+                <mat-icon color="primary" mat-list-icon>logout</mat-icon>
+                <div mat-line>Cerrar Sesión</div>
+            </mat-list-item>
+        </mat-nav-list>
     </div>
 </div>

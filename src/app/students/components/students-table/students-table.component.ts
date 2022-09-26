@@ -9,14 +9,9 @@ import { Observable } from 'rxjs';
 import { Session } from 'src/app/core/models/session.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
-
-export interface DialogDataStudent {
-  student: Student;
-  title: string;
-  modify: boolean;
-}
-
-const WIDTH_DIALOG = '480px';
+import { WIDTH_DIALOG } from 'src/app/shared/consts/consts';
+import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-students-table',
@@ -33,6 +28,7 @@ export class StudentsTableComponent implements OnInit {
   students$!: Observable<Student[]>;
 
   constructor(private dialog: MatDialog,
+    private matSnackBar: MatSnackBar,
     private authService: AuthService,
     private inscriptionsService: InscriptionsService,
     private studentsService: StudentsService) { 
@@ -74,23 +70,35 @@ export class StudentsTableComponent implements OnInit {
   }
 
   delete(element: Student) {
-    if(!confirm(`Desea eliminar al estudiante ${ element.name } ${ element.surname }?`)) {
-      return;
-    }
-    
-    let hasInscription$ = this.inscriptionsService.hasStudentInscriptions(element.id).subscribe({
-      next: (hasInscriptions: boolean) => {
-        if(!hasInscriptions) {
-          this.studentsService.deleteStudent(element.id);
-        } else {
-          alert("Este estudiante tiene inscripciones.");
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `¿Desea eliminar al estudiante ${ element.name } ${ element.surname }?`,
+        buttonText: {
+          ok: 'Aceptar',
+          cancel: 'Cancelar'
         }
       },
-      error: (error) => console.error(error),
-      complete: () => console.log('Finalizó')
     });
 
-    hasInscription$.unsubscribe();
+    dialogRef.afterClosed().subscribe(result => {
+      if(!result) {
+        return;
+      }
+
+      let hasInscription$ = this.inscriptionsService.hasStudentInscriptions(element.id).subscribe({
+        next: (hasInscriptions: boolean) => {
+          if(!hasInscriptions) {
+            this.studentsService.deleteStudent(element.id);
+          } else {
+            this.matSnackBar.open("Este estudiante tiene inscripciones.", "Aceptar");
+          }
+        },
+        error: (error) => console.error(error),
+        complete: () => console.log('Finalizó')
+      });
+  
+      hasInscription$.unsubscribe();
+    });
   }
 
   add() {

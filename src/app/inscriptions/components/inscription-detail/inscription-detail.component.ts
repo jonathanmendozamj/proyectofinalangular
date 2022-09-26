@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { DialogDataInscription } from '../inscriptions-table/inscriptions-table.component';
+import { DialogDataInscription } from 'src/app/core/interfaces/dialog-data-inscription';
 
 @Component({
   selector: 'app-inscription-detail',

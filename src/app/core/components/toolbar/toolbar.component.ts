@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { Session } from '../../models/session.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -14,6 +16,7 @@ export class ToolbarComponent implements OnInit {
   session$!: Observable<Session>;
 
   constructor(private authService: AuthService, 
+    private dialog: MatDialog,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -21,10 +24,22 @@ export class ToolbarComponent implements OnInit {
   }
 
   logout() {
-    console.log("Entro a logout");
-    this.authService.logout();
-    this.router.navigate(['/login']);
-    console.log("Salio de logout");
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `¿Desea cerrar sesión?`,
+        buttonText: {
+          ok: 'Aceptar',
+          cancel: 'Cancelar'
+        }
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.authService.logout();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
 }

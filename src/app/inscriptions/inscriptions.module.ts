@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InscriptionsComponent } from './components/inscriptions/inscriptions.component';
 import { InscriptionsTableComponent } from './components/inscriptions-table/inscriptions-table.component';
 import { InscriptionsRouterModule } from './inscriptions-routing.module';
 import { InscriptionsService } from './services/inscriptions.service';
@@ -9,13 +8,14 @@ import { InscriptionFormComponent } from './components/inscription-form/inscript
 import { SharedModule } from '../shared/shared.module';
 import { CoursesService } from '../courses/services/courses.service';
 import { StudentsService } from '../students/services/students.service';
+import { InscriptionsContainerComponent } from './components/inscriptions-container/inscriptions-container.component';
 
 @NgModule({
   declarations: [
-    InscriptionsComponent,
     InscriptionsTableComponent,
     InscriptionDetailComponent,
     InscriptionFormComponent,
+    InscriptionsContainerComponent,
   ],
   imports: [
     InscriptionsRouterModule,

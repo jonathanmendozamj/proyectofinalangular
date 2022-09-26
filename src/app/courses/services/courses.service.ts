@@ -27,17 +27,17 @@ export class CoursesService {
       });
   }
 
-  private getAllCoursesObservable() {
-    return this.http.get<Course[]>(`${ API }/courses`)
-      .pipe(
-        catchError(handleError),
-        tap(courses => this.subject.next(courses)),
-      )
-  }
-
   getAllCourses() {
     this.readCourses();
     return this.subject;
+  }
+
+  getAllCoursesNew() {
+    console.log("Entro a getAllCoursesNew()");
+    return this.http.get<Course[]>(`${ API }/courses`)
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   getCourse(id: String) {

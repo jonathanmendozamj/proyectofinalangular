@@ -81,6 +81,13 @@ export class InscriptionsService {
     return this.subject;
   }
 
+  getAllInscriptionsNew() {
+    return this.http.get<Inscription[]>(`${ API }/inscriptions`)
+    .pipe(
+      catchError(handleError)
+    );
+  }
+
   hasStudentInscriptions(idStudent: string): Observable<boolean> {
     return this.getAllInscriptions()
       .pipe(

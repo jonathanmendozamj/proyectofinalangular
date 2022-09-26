@@ -8,14 +8,9 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { InscriptionsService } from '../../services/inscriptions.service';
 import { InscriptionDetailComponent } from '../inscription-detail/inscription-detail.component';
 import { InscriptionFormComponent } from '../inscription-form/inscription-form.component';
-
-export interface DialogDataInscription {
-  inscription: Inscription;
-  title: string;
-  modify: boolean;
-}
-
-const WIDTH_DIALOG = '480px';
+import { WIDTH_DIALOG } from 'src/app/shared/consts/consts';
+import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-inscriptions-table',
@@ -32,6 +27,7 @@ export class InscriptionsTableComponent implements OnInit {
   session$!: Observable<Session>;
 
   constructor(private inscriptionService: InscriptionsService,
+    private matSnackBar: MatSnackBar,
     private authService: AuthService,
     private dialog: MatDialog) { }
 
@@ -79,7 +75,7 @@ export class InscriptionsTableComponent implements OnInit {
             if(!existsInscription) {
               this.inscriptionService.addInscription(result);
             } else {
-              alert("Ya existe esta inscripción.");
+              this.matSnackBar.open("Ya existe esta inscripción", "Aceptar");
             }
           },
           error: (error) => console.error(error)
@@ -119,9 +115,23 @@ export class InscriptionsTableComponent implements OnInit {
   }
 
   delete(element: Inscription) {
-    if(element) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `¿Desea eliminar la inscripción del estudiante ${ element.name } ${ element.surname } al curso ${ element.nameCourse }?`,
+        buttonText: {
+          ok: 'Aceptar',
+          cancel: 'Cancelar'
+        }
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(!result) {
+        return;
+      }
+
       this.inscriptionService.deleteInscription(element.id);
-    }
+    });
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { filter, map, Observable } from 'rxjs';
@@ -11,7 +11,6 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-
   session$!: Observable<Session>;
 
   constructor(private authService: AuthService, 
@@ -21,7 +20,6 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.session$ = this.authService.getSession();
-    console.log(this.session$);
   }
 
   setPageTitle() {

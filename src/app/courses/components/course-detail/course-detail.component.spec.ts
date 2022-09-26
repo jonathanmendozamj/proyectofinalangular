@@ -50,7 +50,6 @@ describe('CourseDetail', () => {
     });
 
     it('should be created', () => {
-        console.log(component);
         expect(component).toBeTruthy();
     });
 

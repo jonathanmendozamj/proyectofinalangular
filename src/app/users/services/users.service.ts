@@ -34,6 +34,13 @@ export class UsersService {
     return this.subject;
   }
 
+  public getAllUsersNew() {
+    return this.http.get<User[]>(`${ API }/users`)
+    .pipe(
+      catchError(handleError)
+    );
+  }
+
   addUser(user: User) {
     return this.http.post<User>(`${ API }/users`, user).subscribe((newUser) => {
       alert(`${ newUser.id } - ${ newUser.user } fue agregado satisfactoriamente.`);
