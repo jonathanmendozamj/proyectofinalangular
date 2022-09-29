@@ -13,7 +13,7 @@ export class InscriptionDetailComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public dialogData: DialogDataInscription) { }
 
   ngOnInit(): void {
-    console.log(this.dialogData);
+
   }
 
   close() {

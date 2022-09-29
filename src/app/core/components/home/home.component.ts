@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { loadingInscriptions } from 'src/app/inscriptions/states/actions/inscriptions.action';
+import { InscriptionState } from '../../models/inscription.state';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +10,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private inscriptionsStore: Store<InscriptionState>) { }
 
   ngOnInit(): void {
+    this.inscriptionsStore.dispatch(loadingInscriptions());
   }
 
 }

@@ -17,17 +17,17 @@ export class ConfirmationDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<ConfirmationDialogComponent>
   ) { 
 
-    if(data){
-      this.message = data.message || this.message;
-      if (data.buttonText) {
-        this.confirmButtonText = data.buttonText.ok || this.confirmButtonText;
-        this.cancelButtonText = data.buttonText.cancel || this.cancelButtonText;
-      }
-    }
+    
   }
 
   ngOnInit(): void {
-    
+    if(this.data){
+      this.message = this.data.message || this.message;
+      if (this.data.buttonText) {
+        this.confirmButtonText = this.data.buttonText.ok || this.confirmButtonText;
+        this.cancelButtonText = this.data.buttonText.cancel || this.cancelButtonText;
+      }
+    }
   }
 
   onConfirmClick(): void {

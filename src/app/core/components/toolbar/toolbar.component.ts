@@ -5,6 +5,10 @@ import { AuthService } from '../../services/auth.service';
 import { Session } from '../../models/session.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { Store } from '@ngrx/store';
+import { closeSession } from '../../states/actions/user.actions';
+import { AppState } from '../../states/app.state';
+import { sessionSelector } from '../../states/selectors/user.selector';
 
 @Component({
   selector: 'app-toolbar',
@@ -15,12 +19,12 @@ export class ToolbarComponent implements OnInit {
 
   session$!: Observable<Session>;
 
-  constructor(private authService: AuthService, 
+  constructor(private sessionStore: Store<AppState>,
     private dialog: MatDialog,
     private router: Router) { }
 
   ngOnInit(): void {
-    this.session$ = this.authService.getSession();
+    this.session$ = this.sessionStore.select(sessionSelector)
   }
 
   logout() {
@@ -36,7 +40,8 @@ export class ToolbarComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-        this.authService.logout();
+        this.sessionStore.dispatch(closeSession());
+        //this.authService.logout();
         this.router.navigate(['/login']);
       }
     });

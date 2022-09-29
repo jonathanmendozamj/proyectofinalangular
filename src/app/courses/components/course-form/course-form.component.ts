@@ -23,6 +23,9 @@ export class CourseFormComponent implements OnInit {
       id: [this.dialogData.course?.id],
       nameCourse: [this.dialogData.course?.nameCourse, [Validators.required, Validators.maxLength(80)]],
       commission: [this.dialogData.course?.commission, [Validators.required, Validators.pattern(/^\d+$/), Validators.minLength(4), Validators.maxLength(8)]],
+      countHours: [this.dialogData.course?.countHours, [Validators.required, Validators.pattern(/^\d+$/), Validators.minLength(1), Validators.maxLength(3)]],
+      countClasses: [this.dialogData.course?.countClasses, [Validators.required, Validators.pattern(/^\d+$/), Validators.minLength(1), Validators.maxLength(3)]],
+      professor: [this.dialogData.course?.professor, [Validators.required, Validators.maxLength(150)]],
     });
   }
 

@@ -11,6 +11,15 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { WIDTH_DIALOG } from 'src/app/shared/consts/consts';
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
+import { selectorLoadedUsers } from '../../states/selectors/users.selector';
+import { Store } from '@ngrx/store';
+import { loadingUsers } from '../../states/actions/users.action';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserState } from 'src/app/core/models/user.state';
+import { sessionSelector } from 'src/app/core/states/selectors/user.selector';
+import { AppState } from 'src/app/core/states/app.state';
+import { UserDetailComponent } from '../user-detail/user-detail.component';
+import { ValidateInscriptionsService } from 'src/app/core/services/validate-inscriptions.service';
 
 @Component({
   selector: 'app-users-table',
@@ -26,11 +35,13 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   users$!: Observable<User[]>;
-  session$!: Observable<Session>;
+  session$!: Observable<Session | undefined>;
 
   constructor(private usersService: UsersService, 
-    private liveAnnouncer: LiveAnnouncer,
-    private authService: AuthService,
+    private sessionStore: Store<AppState>,
+    private usersStore: Store<UserState>,
+    private matSnackBar: MatSnackBar,
+    private validateInscriptionsService: ValidateInscriptionsService,
     private dialog: MatDialog) { 
 
   }
@@ -39,36 +50,30 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      this.liveAnnouncer.announce(`Sorted ${ sortState.direction } ending`);
-    } else {
-      this.liveAnnouncer.announce('Sorting cleared');
-    }
-  }
-
   ngOnInit(): void {
-    this.usersService.getAllUsers().subscribe({
+    this.users$ = this.usersStore.select(selectorLoadedUsers);
+
+    this.users$.subscribe({
       next: (data) => {
         this.LIST_USERS = data as User[];
         this.dataSource = new MatTableDataSource(this.LIST_USERS);
         this.dataSource.sort = this.sort;
       },
       error: (error) => {
-        console.error(error);
-      },
-      complete: () => {
-        console.log('Completado.');
+        this.matSnackBar.open(`Error! ${ error }`, 'Aceptar');
       }
     });
 
-    this.session$ = this.authService.getSession();
+    this.session$ = this.sessionStore.select(sessionSelector);
   }
 
   add() {
     let user: User = {
       id: '',
       user: '',
+      name: '',
+      address: '',
+      phone: '',
       password: '',
       isAdmin: false
     }
@@ -84,7 +89,11 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        this.usersService.addUser(result as User);
+        this.usersService.addUser(result as User)
+          .subscribe((user) => {
+            this.usersStore.dispatch(loadingUsers());
+            this.matSnackBar.open(`El usuario ${ user.user } fue agregado exitosamente.`, 'Aceptar');
+          });
       }
     });
   }
@@ -101,7 +110,11 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        this.usersService.modifyUser(result as User);
+        this.usersService.modifyUser(result as User)
+          .subscribe((user) => {
+            this.usersStore.dispatch(loadingUsers());
+            this.matSnackBar.open(`Los datos del usuario ${ user.user } fueron editados exitosamente.`, 'Aceptar');
+          });
       }
     });
   }
@@ -122,7 +135,30 @@ export class UsersTableComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      this.usersService.deleteUser(element);
+      this.validateInscriptionsService.hasUserMadeInscriptions(element.id)
+        .subscribe(hasUserMadeInscriptions => {
+          if(hasUserMadeInscriptions) {
+            this.usersService.deleteUser(element)
+              .subscribe((user) => {
+                this.usersStore.dispatch(loadingUsers());
+                this.matSnackBar.open(`El usuario ${ user.user } fue eliminado exitosamente.`, 'Aceptar');
+              });
+          } else {
+            this.matSnackBar.open(`Este usuario tiene inscripciones realizadas, por lo que no se puede eliminar.`, 'Aceptar');
+          }
+        });
+      
+    });
+  }
+
+  showDetail(element: User) {
+    const dialogRef = this.dialog.open(UserDetailComponent, {
+      width: WIDTH_DIALOG,
+      data: {
+        user: element,
+        title: 'Ver detalle del usuario',
+        modify: true
+      }
     });
   }
 

@@ -1,5 +1,4 @@
 <div class="d-flex justify-content-between mb-3">
-    <h1 class="align-middle">Tabla de estudiantes</h1>
     <div *ngIf="session$ | async as session">
         <div *ngIf="session.user?.isAdmin">
             <button class="align-middle" color="primary" mat-raised-button (click)="add()">

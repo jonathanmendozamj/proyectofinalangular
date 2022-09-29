@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UsersTableComponent } from './components/users-table/users-table.component';
+import { UsersContainerComponent } from './components/users-container/users-container.component';
 
 const routes: Routes = [
     {
@@ -8,7 +8,7 @@ const routes: Routes = [
         children: [
             {
                 path: 'lista', 
-                component: UsersTableComponent,
+                component: UsersContainerComponent,
                 title: 'Usuarios'
             }
         ]

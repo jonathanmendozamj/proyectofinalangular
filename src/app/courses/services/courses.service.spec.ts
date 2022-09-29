@@ -27,9 +27,9 @@ describe('CoursesService', () => {
 
   it('should return an array of courses', (done: DoneFn) => {
     const mockData = [
-      {"nameCourse":"Hidrocarburos Aromaticos","commission":"41876","id":"1"},
-      {"nameCourse":"Vue JS","commission":"95909","id":"2"},
-      {"nameCourse":"Bootstrap","commission":"49908","id":"3"}
+      {"professor": "Juan Pablo Jimenez", "countClasses": "20", "countHours": "10", "nameCourse": "Hidrocarburos Aromaticos","commission":"41876","id":"1"},
+      {"professor": "Juan Pablo Jimenez", "countClasses": "20", "countHours": "10", "nameCourse": "Vue JS","commission":"95909","id":"2"},
+      {"professor": "Juan Pablo Jimenez", "countClasses": "20", "countHours": "10", "nameCourse": "Bootstrap","commission":"49908","id":"3"}
     ];
 
     httpClientSpy.get.and.returnValue(of(mockData));

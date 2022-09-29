@@ -1,1 +1,7 @@
-<p>inscriptions-container works!</p>
+<h1 class="align-middle">Tabla de inscripciones</h1>
+<div>
+    <div class="d-flex justify-content-center align-items-middle" *ngIf="(loading$ | async)">
+        <mat-spinner></mat-spinner>
+    </div>
+    <app-inscriptions-table *ngIf="!(loading$ | async)"></app-inscriptions-table>
+</div>

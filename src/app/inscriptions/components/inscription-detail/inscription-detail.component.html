@@ -20,6 +20,16 @@
         <label>Comisión</label>
         <label class="font-weight-bold text-right">{{ this.dialogData.inscription.commission || '' }}</label>
     </div>
+
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Fecha de inscripción</label>
+        <label class="font-weight-bold text-right">{{ (this.dialogData.inscription.dateInscription | date: 'dd/MM/yyyy') || '' }}</label>
+    </div>
+
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Usuario</label>
+        <label class="font-weight-bold text-right">{{ this.dialogData.inscription.user || '' }}</label>
+    </div>
 </div>
 
 <div mat-dialog-actions>

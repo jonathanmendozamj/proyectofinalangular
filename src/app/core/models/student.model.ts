@@ -4,5 +4,6 @@ export interface Student {
     surname: string;
     dni: string;
     mail: string;
+    gender: string;
     message?: string;
 }

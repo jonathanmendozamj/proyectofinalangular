@@ -4,7 +4,11 @@ import { CourseFormComponent } from './course-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
+import { provideMockStore } from '@ngrx/store/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CourseForm (new course)', () => {
     let component: CourseFormComponent;
@@ -24,12 +28,16 @@ describe('CourseForm (new course)', () => {
         await TestBed.configureTestingModule({
             imports: [
                 ReactiveFormsModule,
-                MatDialogModule
+                MatDialogModule,
+                MatFormFieldModule,
+                MatInputModule,
+                BrowserAnimationsModule
             ],
             declarations: [ 
                 CourseFormComponent 
             ],
             providers: [
+                provideMockStore({}),
                 CoursesService,
                 { provide: MatDialogRef, useValue: matDialogSpy},           
                 { provide: MAT_DIALOG_DATA, useValue: data }
@@ -59,9 +67,15 @@ describe('CourseForm (new course)', () => {
         const formCourse = component.formCourse;
         const nombre = formCourse.controls['nameCourse'];
         const commission = formCourse.controls['commission'];
+        const countHours = formCourse.controls['countHours'];
+        const countClasses = formCourse.controls['countClasses'];
+        const professor = formCourse.controls['professor'];
 
         nombre.setValue('Portugués');
         commission.setValue('99999');
+        countHours.setValue('10');
+        countClasses.setValue('10');
+        professor.setValue('Abner');
 
         expect(formCourse.valid).toBeTrue();
     });

@@ -12,6 +12,13 @@ import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.
 import { WIDTH_DIALOG } from 'src/app/shared/consts/consts';
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { selectorLoadedStudents } from '../../states/selectors/students.selector';
+import { Store } from '@ngrx/store';
+import { StudentState } from 'src/app/core/models/student.state';
+import { loadingStudents } from '../../states/actions/students.action';
+import { sessionSelector } from 'src/app/core/states/selectors/user.selector';
+import { AppState } from 'src/app/core/states/app.state';
+import { ValidateInscriptionsService } from 'src/app/core/services/validate-inscriptions.service';
 
 @Component({
   selector: 'app-students-table',
@@ -29,27 +36,28 @@ export class StudentsTableComponent implements OnInit {
 
   constructor(private dialog: MatDialog,
     private matSnackBar: MatSnackBar,
-    private authService: AuthService,
+    private sessionStore: Store<AppState>,
+    private validateInscriptionsService: ValidateInscriptionsService,
     private inscriptionsService: InscriptionsService,
+    private studentsStore: Store<StudentState>,
     private studentsService: StudentsService) { 
       
   }
 
   ngOnInit(): void {
-    this.studentsService.getAllStudents().subscribe({
+    this.students$ = this.studentsStore.select(selectorLoadedStudents);
+
+    this.students$.subscribe({
       next: (data) => {
         this.LIST_STUDENTS = data as Student[];
         this.dataSource = new MatTableDataSource(this.LIST_STUDENTS);
       },
       error: (error) => {
-        console.error(error);
-      },
-      complete: () => {
-        console.log('Completado.');
+        this.matSnackBar.open(`Error! ${ error }`, 'Aceptar');
       }
     });
 
-    this.session$ = this.authService.getSession();
+    this.session$ = this.sessionStore.select(sessionSelector)
   }
 
   edit(element: Student) {
@@ -64,7 +72,11 @@ export class StudentsTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        this.studentsService.modifyStudent(result);
+        this.studentsService.modifyStudent(result)
+          .subscribe((student) => {
+            this.studentsStore.dispatch(loadingStudents());
+            this.matSnackBar.open(`Los datos del estudiante ${ student.name } ${ student.surname } fueron editados exitosamente.`, 'Aceptar');
+          });
       }
     });
   }
@@ -85,16 +97,19 @@ export class StudentsTableComponent implements OnInit {
         return;
       }
 
-      let hasInscription$ = this.inscriptionsService.hasStudentInscriptions(element.id).subscribe({
+      let hasInscription$ = this.validateInscriptionsService.hasStudentInscriptions(element.id).subscribe({
         next: (hasInscriptions: boolean) => {
           if(!hasInscriptions) {
-            this.studentsService.deleteStudent(element.id);
+            this.studentsService.deleteStudent(element.id)
+              .subscribe((student) => {
+                this.studentsStore.dispatch(loadingStudents());
+                this.matSnackBar.open(`El estudiante ${ student.name } ${ student.surname } fue eliminado exitosamente.`, 'Aceptar');
+              });
           } else {
             this.matSnackBar.open("Este estudiante tiene inscripciones.", "Aceptar");
           }
         },
-        error: (error) => console.error(error),
-        complete: () => console.log('Finalizó')
+        error: (error) => this.matSnackBar.open(`Error! ${ error }`, 'Aceptar'),
       });
   
       hasInscription$.unsubscribe();
@@ -106,6 +121,7 @@ export class StudentsTableComponent implements OnInit {
       id: '',
       name: '',
       surname: '',
+      gender: '',
       dni: '',
       mail: '',
       message: ''
@@ -122,16 +138,13 @@ export class StudentsTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-        this.studentsService.addStudent(result);
+        this.studentsService.addStudent(result)
+          .subscribe((student) => {
+            this.studentsStore.dispatch(loadingStudents());
+            this.matSnackBar.open(`El estudiante ${ student.name } ${ student.surname } fue agregado exitosamente.`, 'Aceptar');
+          });
       }
     });
-  }
-
-  filter(event: Event) {
-    console.log(event);
-    let obtainedValue = (event.target as HTMLInputElement).value;
-    obtainedValue = obtainedValue.trim().toLocaleLowerCase();
-    console.log(obtainedValue);
   }
 
   showDetail(element: Student) {

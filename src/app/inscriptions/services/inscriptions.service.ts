@@ -8,6 +8,8 @@ import { StudentsService } from 'src/app/students/services/students.service';
 import { Course } from 'src/app/core/models/course.model';
 import { Student } from 'src/app/core/models/student.model';
 import { handleError } from 'src/app/shared/functions/handle-error';
+import { UsersService } from 'src/app/users/services/users.service';
+import { User } from 'src/app/core/models/user.model';
 
 const API = environment.api;
 
@@ -15,132 +17,90 @@ const API = environment.api;
   providedIn: 'root'
 })
 export class InscriptionsService {
-  private subject!: BehaviorSubject<Inscription[]>;
-
   private courses: Course[] = [];
   private students: Student[] = [];
+  private users: User[] = [];
 
   constructor(private http: HttpClient, 
+    private usersService: UsersService,
     private studentsService: StudentsService,
     private coursesService: CoursesService) { 
 
-    this.subject = new BehaviorSubject<Inscription[]>([]);
-  }
-
-  private readInscriptions() {
-    this.coursesService.getAllCourses().subscribe({
-      next: (courses: Course[]) => {
-        this.courses = courses;
-      },
-      error: (error: any) => {
-        console.error(error);
-      },
-      complete: () => {
-        console.log('Completado.');
-      }
-    });
-
-    this.studentsService.getAllStudents().subscribe({
-      next: (students) => {
-        this.students = students;
-      },
-      error: (error) => {
-        console.error(error);
-      },
-      complete: () => {
-        console.log('Completado.');
-      }
-    });
-
-    this.http.get<Inscription[]>(`${ API }/inscriptions`)
-      .pipe(
-        catchError(handleError)
-      )
-      .subscribe((inscriptions) => {
-        let inscriptionsData = inscriptions.map(item => {
-          let courseData = this.courses.find(course => String(item.idCourse) === course.id);
-          let studentData = this.students.find(student => String(item.idStudent) === student.id);
-
-          /*console.log(courseData);
-          console.log(studentData);*/
-
-          return { 
-            ...item,
-            ...courseData, 
-            ...studentData,
-            id: item.id
-          };
-        });
-
-        this.subject.next(inscriptionsData);
-      });
   }
 
   getAllInscriptions() {
-    this.readInscriptions();
-    return this.subject;
-  }
+    this.coursesService.getAllCourses()
+      .subscribe({
+        next: (courses: Course[]) => {
+          this.courses = courses;
+        },
+        error: (error: any) => {
+          console.error(error);
+        }
+      });
 
-  getAllInscriptionsNew() {
+    this.studentsService.getAllStudents()
+      .subscribe({
+        next: (students) => {
+          this.students = students;
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+
+    this.usersService.getAllUsers()
+      .subscribe({
+        next: (users) => {
+          this.users = users;
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+
+    this.usersService.getAllUsers()
+
     return this.http.get<Inscription[]>(`${ API }/inscriptions`)
-    .pipe(
-      catchError(handleError)
-    );
-  }
-
-  hasStudentInscriptions(idStudent: string): Observable<boolean> {
-    return this.getAllInscriptions()
       .pipe(
-        map((inscriptions: Inscription[]) => inscriptions.some(item => String(item.idStudent) === idStudent))
-      );
-  }
+        catchError(handleError),
+        map(inscriptions => inscriptions.map(
+          item => {
+            let courseData = this.courses.find(course => String(item.idCourse) === course.id);
+            let studentData = this.students.find(student => String(item.idStudent) === student.id);
+            let userData = this.users.find(user => String(item.idUser) === user.id);
 
-  hasCourseInscriptions(idCourse: String) {
-    return this.getAllInscriptions()
-      .pipe(
-        map((inscriptions: Inscription[]) => inscriptions.some(item => String(item.idCourse) === idCourse))
-      );
-  }
-
-  existsInscription(idCourse: String, idStudent: String) {
-    return this.getAllInscriptions()
-      .pipe(
-        map((inscriptions: Inscription[]) => inscriptions.some(item => String(item.idCourse) === idCourse && String(item.idStudent) === idStudent))
-      );
-  }
-
-  getInscriptionsForStudent(idStudent: string) {
-    return this.getAllInscriptions()
-      .pipe(
-        map((inscriptions: Inscription[]) => inscriptions.filter(item => String(item.idStudent) === idStudent))
-      );
-  }
-
-  getInscriptionsForCourse(idCourse: String) {
-    return this.getAllInscriptions()
-      .pipe(
-        map((inscriptions: Inscription[]) => inscriptions.filter(item => String(item.idCourse) === idCourse))
+            return { 
+              ...item,
+              ...courseData, 
+              ...studentData,
+              ...userData,
+              dateInscription: (item.dateInscription * 1000),
+              id: item.id
+            };
+          }
+        ))
       );
   }
 
   addInscription(inscription: Inscription) {
-    return this.http.post<Inscription>(`${ API }/inscriptions`, inscription).subscribe((newInscription) => {
-      alert(`${ newInscription.id } - ${ newInscription.idCourse } fue agregado satisfactoriamente.`);
-      this.readInscriptions();
-    });
+    return this.http.post<Inscription>(`${ API }/inscriptions`, inscription)
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   modifyInscription(inscription: Inscription) {
-    this.http.put<Inscription>(`${ API }/inscriptions/${ inscription.id }`, inscription).subscribe((modifiedInscription) => {
-      alert(`${ modifiedInscription.id } - ${ modifiedInscription.nameCourse } fue editado satisfactoriamente.`);
-      this.readInscriptions();
-    });
+    return this.http.put<Inscription>(`${ API }/inscriptions/${ inscription.id }`, inscription)
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   deleteInscription(id: String) {
-    this.http.delete<Inscription>(`${ API }/inscriptions/${ id }`).subscribe((deletedInscription) => {
-      alert(`${ deletedInscription.id } - ${ deletedInscription.idCourse } - ${ deletedInscription.idStudent } fue eliminado satisfactoriamente.`);
-      this.readInscriptions();
-    });
+    return this.http.delete<Inscription>(`${ API }/inscriptions/${ id }`)
+      .pipe(
+        catchError(handleError)
+      );
   }
 }

@@ -13,6 +13,7 @@ import { selectorLoadingCourses } from '../../states/selectors/courses.selector'
 export class CoursesContainerComponent implements OnInit {
 
   loading$!: Observable<boolean>;
+  
 
   constructor(private coursesStore: Store<CourseState>) { }
 

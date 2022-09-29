@@ -10,7 +10,7 @@ export class UserEffects {
     loadCourses$ = createEffect((): any => {
         return this.actions$.pipe(
             ofType(UserActions.loadingUsers),
-            mergeMap(() => this.usersService.getAllUsersNew()
+            mergeMap(() => this.usersService.getAllUsers()
                 .pipe(
                     map((users: User[]) => UserActions.loadedUsers({users: users}))
                 ))

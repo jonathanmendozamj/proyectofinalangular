@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { filter, map, Observable } from 'rxjs';
 import { Session } from '../../models/session.model';
 import { AuthService } from '../../services/auth.service';
+import { AppState } from '../../states/app.state';
+import { sessionSelector } from '../../states/selectors/user.selector';
 
 @Component({
   selector: 'app-navbar',
@@ -13,13 +16,13 @@ import { AuthService } from '../../services/auth.service';
 export class NavbarComponent implements OnInit {
   session$!: Observable<Session>;
 
-  constructor(private authService: AuthService, 
-    private router: Router,
+  constructor(private router: Router,
+    private sessionStore: Store<AppState>,
     private activatedRoute: ActivatedRoute,
     private title: Title) { }
 
   ngOnInit(): void {
-    this.session$ = this.authService.getSession();
+    this.session$ = this.sessionStore.select(sessionSelector);
   }
 
   setPageTitle() {

@@ -1,1 +1,7 @@
-<p>students-component works!</p>
+<h1 class="align-middle">Tabla de estudiantes</h1>
+<div>
+    <div class="d-flex justify-content-center align-items-middle" *ngIf="(loading$ | async)">
+        <mat-spinner></mat-spinner>
+    </div>
+    <app-students-table *ngIf="!(loading$ | async)"></app-students-table>
+</div>

@@ -9,6 +9,10 @@ import { SharedModule } from '../shared/shared.module';
 import { CoursesService } from '../courses/services/courses.service';
 import { StudentsService } from '../students/services/students.service';
 import { InscriptionsContainerComponent } from './components/inscriptions-container/inscriptions-container.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { InscriptionEffects } from './states/effects/inscriptions.effect';
+import * as FromInscriptions from './states/reducers/inscriptions.reducer';
 
 @NgModule({
   declarations: [
@@ -20,7 +24,12 @@ import { InscriptionsContainerComponent } from './components/inscriptions-contai
   imports: [
     InscriptionsRouterModule,
     CommonModule,
-    SharedModule
+    SharedModule,
+    StoreModule.forFeature(
+      FromInscriptions.INSCRIPTIONS_FEATURED_KEY,
+      FromInscriptions.inscriptionsReducer
+    ),
+    EffectsModule.forFeature([InscriptionEffects]),
   ],
   providers: [
     InscriptionsService,

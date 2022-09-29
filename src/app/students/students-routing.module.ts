@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { StudentsTableComponent } from './components/students-table/students-table.component';
+import { StudentsContainerComponent } from './components/students-container/students-container.component';
 
 const routes: Routes = [
     {
@@ -8,7 +8,7 @@ const routes: Routes = [
         children: [
             {
                 path: 'lista', 
-                component: StudentsTableComponent,
+                component: StudentsContainerComponent,
                 title: 'Estudiantes'
             }
         ]

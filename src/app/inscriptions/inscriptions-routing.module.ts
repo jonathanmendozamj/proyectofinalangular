@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { InscriptionsTableComponent } from './components/inscriptions-table/inscriptions-table.component';
+import { InscriptionsContainerComponent } from './components/inscriptions-container/inscriptions-container.component';
 
 const routes: Routes = [
     {
@@ -8,7 +8,7 @@ const routes: Routes = [
         children: [
             {
                 path: 'lista', 
-                component: InscriptionsTableComponent,
+                component: InscriptionsContainerComponent,
                 title: 'Inscripciones'
             }
         ]

@@ -1,3 +1,3 @@
 import { AppState } from "../app.state";
 
-export const userSelector = (state: AppState) => state.session;
+export const sessionSelector = (state: AppState) => state.session;

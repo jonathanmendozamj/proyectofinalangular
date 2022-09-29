@@ -4,20 +4,25 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
-import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 import { CourseDetailComponent } from './course-detail.component';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('CourseDetail', () => {
     let component: CourseDetailComponent;
     let fixture: ComponentFixture<CourseDetailComponent>;
     const matDialogSpy = jasmine.createSpyObj('MatDialog', ['close']);
     const matDialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
+    const matSnackBarSpy = jasmine.createSpyObj('MatSnackBar', ['close']);
     const data: any = {
         course: {
             id: '',
             nameCourse: '',
+            countHours: '',
+            countClasses: '',
+            professor: '',
             commission: ""
         },
         title: 'Detalle de curso',
@@ -28,6 +33,7 @@ describe('CourseDetail', () => {
 
         await TestBed.configureTestingModule({
             imports: [ 
+                MatSnackBarModule,
                 MatDialogModule,
                 HttpClientTestingModule,
                 MatTableModule
@@ -36,10 +42,11 @@ describe('CourseDetail', () => {
                 CourseDetailComponent 
             ],
             providers: [
-                {provide: MatDialogRef, useValue: matDialogSpy},
+                provideMockStore({}),
+                { provide: MatSnackBar, useValue: matSnackBarSpy },
+                { provide: MatDialogRef, useValue: matDialogSpy },
                 { provide: MAT_DIALOG_DATA, useValue: data },
-                { provide: MatTableDataSource, useValue: matDialogRefSpy},
-                InscriptionsService
+                { provide: MatTableDataSource, useValue: matDialogRefSpy}
             ]
         })
         .compileComponents();

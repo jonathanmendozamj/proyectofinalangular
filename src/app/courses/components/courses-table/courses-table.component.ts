@@ -4,8 +4,6 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { Course } from 'src/app/core/models/course.model';
 import { Session } from 'src/app/core/models/session.model';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 import { CoursesService } from '../../services/courses.service';
 import { CourseDetailComponent } from '../course-detail/course-detail.component';
 import { CourseFormComponent } from '../course-form/course-form.component';
@@ -15,6 +13,10 @@ import { CourseState } from 'src/app/core/models/course.state';
 import { selectorLoadedCourses } from '../../states/selectors/courses.selector';
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
 import * as CoursesAction from '../../states/actions/courses.action';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AppState } from 'src/app/core/states/app.state';
+import { sessionSelector } from 'src/app/core/states/selectors/user.selector';
+import { ValidateInscriptionsService } from 'src/app/core/services/validate-inscriptions.service';
 
 @Component({
   selector: 'app-courses-table',
@@ -32,9 +34,10 @@ export class CoursesTableComponent implements OnInit {
   courses$!: Observable<Course[]>;
 
   constructor(private dialog: MatDialog,
-    private authService: AuthService,
-    private inscriptionService: InscriptionsService,
+    private matSnackBar: MatSnackBar,
+    private validateInscriptionsService: ValidateInscriptionsService,
     private coursesStore: Store<CourseState>,
+    private sessionStore: Store<AppState>,
     private courseService: CoursesService) { 
     
   }
@@ -45,19 +48,14 @@ export class CoursesTableComponent implements OnInit {
     this.courses$.subscribe({
       next: (data: Course[]) => {
         this.LIST_COURSES = data;
-
-        console.log(this.LIST_COURSES);
         this.dataSource = new MatTableDataSource(this.LIST_COURSES);
       },
       error: (error: any) => {
-        console.error(error);
-      },
-      complete: () => {
-        console.log('Completado.');
+        this.matSnackBar.open(`Error! ${ error }`, 'Aceptar');
       }
     });
 
-    this.session$ = this.authService.getSession();
+    this.session$ = this.sessionStore.select(sessionSelector);
   }
 
   edit(element: Course) {
@@ -72,7 +70,11 @@ export class CoursesTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        this.courseService.modifyCourse(result);
+        this.courseService.modifyCourse(result)
+          .subscribe((course) => {
+            this.coursesStore.dispatch(CoursesAction.loadingCourses());
+            this.matSnackBar.open(`Los datos del curso ${ course.nameCourse } fueron editados exitosamente.`, 'Aceptar');
+          });
       }
     });
   }
@@ -94,17 +96,20 @@ export class CoursesTableComponent implements OnInit {
         return;
       }
 
-      let hasInscriptions = this.inscriptionService.hasCourseInscriptions(element.id)
+      let hasInscriptions = this.validateInscriptionsService.hasCourseInscriptions(element.id)
         .subscribe({
           next: (hasInscriptions) => {
             if(!hasInscriptions) {
-              this.courseService.deleteCourse(element.id);
+              this.courseService.deleteCourse(element.id)
+                .subscribe((course) => {
+                  this.coursesStore.dispatch(CoursesAction.loadingCourses());
+                  this.matSnackBar.open(`El curso ${ course.nameCourse } fue eliminado exitosamente.`, 'Aceptar');
+                });
             } else {
-              alert("Este curso tiene inscripciones.");
+              this.matSnackBar.open(`Este curso tiene inscripciones.`, 'Aceptar');
             }
           },
-          error: (error) => console.error(error),
-          complete: () => console.log('Finalizó')
+          error: (error) => this.matSnackBar.open(`Error! ${ error }`, 'Aceptar')
         });
 
       hasInscriptions.unsubscribe();
@@ -115,6 +120,9 @@ export class CoursesTableComponent implements OnInit {
     let element: Course = {
       id: '',
       nameCourse: '',
+      countHours: '',
+      countClasses: '',
+      professor: '',
       commission: ""
     }
 
@@ -129,7 +137,11 @@ export class CoursesTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        this.courseService.addCourse(result);
+        this.courseService.addCourse(result)
+          .subscribe((course) => {
+            this.coursesStore.dispatch(CoursesAction.loadingCourses());
+            this.matSnackBar.open(`El curso ${ course.nameCourse } fue agregado exitosamente.`, 'Aceptar');
+          });
       }
     });
   }

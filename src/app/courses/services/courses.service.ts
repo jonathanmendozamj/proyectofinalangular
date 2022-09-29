@@ -11,29 +11,11 @@ const API = environment.api;
   providedIn: 'root'
 })
 export class CoursesService {
-  private subject!: BehaviorSubject<Course[]>;
-  
   constructor(private http: HttpClient) { 
-    this.subject = new BehaviorSubject<Course[]>([]);
-  }
 
-  private readCourses() {
-    this.http.get<Course[]>(`${ API }/courses`)
-      .pipe(
-        catchError(handleError)
-      )
-      .subscribe((courses) => {
-        this.subject.next(courses);
-      });
   }
 
   getAllCourses() {
-    this.readCourses();
-    return this.subject;
-  }
-
-  getAllCoursesNew() {
-    console.log("Entro a getAllCoursesNew()");
     return this.http.get<Course[]>(`${ API }/courses`)
       .pipe(
         catchError(handleError)
@@ -41,30 +23,30 @@ export class CoursesService {
   }
 
   getCourse(id: String) {
-    return this.http.get<Course>(`${ API }/courses/${ id }`);
+    return this.http.get<Course>(`${ API }/courses/${ id }`)
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   addCourse(course: Course) {
     return this.http.post<Course>(`${ API }/courses`, course)
-      .subscribe((newCourse) => {
-        alert(`${ newCourse.id } - ${ newCourse.nameCourse } fue agregado satisfactoriamente.`);
-        this.readCourses();
-      });
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   modifyCourse(course: Course) {
     return this.http.put<Course>(`${ API }/courses/${ course.id }`, course)
-      .subscribe((modifiedCourse) => {
-        alert(`${ modifiedCourse.id } - ${ modifiedCourse.nameCourse } fue editado satisfactoriamente.`);
-        this.readCourses();
-      });
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   deleteCourse(id: String) {
     return this.http.delete<Course>(`${ API }/courses/${ id }`)
-      .subscribe((deletedCourse) => {
-        alert(`${ deletedCourse.id } - ${ deletedCourse.nameCourse } fue eliminado satisfactoriamente.`);
-        this.readCourses();
-      });
+      .pipe(
+        catchError(handleError)
+      );
   }
 }

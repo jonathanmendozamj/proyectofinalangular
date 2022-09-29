@@ -17,6 +17,13 @@
             <mat-error *ngIf="this.formStudent.get('surname')?.errors?.['maxlength'] && this.formStudent.get('surname')?.touched">El apellido no puede tener más de 80 caracteres.</mat-error>
         </mat-form-field>
 
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Género</mat-label>
+            <mat-select formControlName="gender" matInput>
+                <mat-option *ngFor="let gender of genders" [value]="gender">{{ gender }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <!-- DNI - Documento Nacional de Identidad -->
         <mat-form-field class="w-100 mb-2" appearance="fill">
             <mat-label>DNI</mat-label>

@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   
   constructor(private fb: FormBuilder,
     private matSnackBar: MatSnackBar,
-    private store: Store<AppState>,
+    private sessionStore: Store<AppState>,
     private router: Router,
     private authService: AuthService) { 
       
@@ -43,18 +43,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     let login$ = this.authService.login(this.formLogin.value)
       .subscribe({
         next: (data: User) => {
-          console.log(data);
-          
           if(data) {
-            this.store.dispatch(createSession({user: data}));
-            this.authService.setSession(data);
+            this.sessionStore.dispatch(createSession({user: data}));
             this.router.navigate(['/inicio']);
           } else {
             this.matSnackBar.open("No puede loguearse", "Aceptar");
           }
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.log('Finalizó el login de onSubmitForm')
+        error: (error: any) => this.matSnackBar.open(`Error! ${ error }`, 'Aceptar')
       });
 
     login$.unsubscribe();

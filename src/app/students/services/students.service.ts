@@ -12,59 +12,43 @@ const API = environment.api;
 })
 export class StudentsService {
 
-  //private studentsObservable: Observable<any>;
-  private inscriptionsObservable!: Observable<any>;
-  private subject!: BehaviorSubject<Student[]>;
-
   constructor(private http: HttpClient) { 
-    this.subject = new BehaviorSubject<Student[]>([]);
-  }
 
-  private readStudents() {
-    this.http.get<Student[]>(`${ API }/students`)
-      .pipe(
-        catchError(handleError)
-      )
-      .subscribe((students) => {
-        this.subject.next(students);
-      });
   }
 
   getAllStudents() {
-    this.readStudents();
-    return this.subject;
-  }
-
-  getAllStudentsNew() {
     return this.http.get<Student[]>(`${ API }/students`)
-    .pipe(
-      catchError(handleError)
-    );
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   getStudent(id: String) {
-    return this.http.get<Student>(`${ API }/students/${ id }`);
+    return this.http.get<Student>(`${ API }/students/${ id }`)
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   addStudent(student: Student) {
-    return this.http.post<Student>(`${ API }/students`, student).subscribe((newStudent) => {
-      alert(`${ newStudent.id } - ${ newStudent.name } fue agregado satisfactoriamente.`);
-      this.readStudents();
-    });
+    return this.http.post<Student>(`${ API }/students`, student)
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   modifyStudent(student: Student) {
-    this.http.put<Student>(`${ API }/students/${ student.id }`, student).subscribe((modifiedStudent) => {
-      alert(`${ modifiedStudent.id } - ${ modifiedStudent.name } fue editado satisfactoriamente.`);
-      this.readStudents();
-    });
+    return this.http.put<Student>(`${ API }/students/${ student.id }`, student)
+      .pipe(
+        catchError(handleError)
+      );
   }
 
   deleteStudent(id: String) {
-    this.http.delete<Student>(`${ API }/students/${ id }`).subscribe((deletedStudent) => {
-      alert(`${ deletedStudent.id } - ${ deletedStudent.name } fue eliminado satisfactoriamente.`);
-      this.readStudents();
-    });
+    return this.http.delete<Student>(`${ API }/students/${ id }`)
+      .pipe(
+        catchError(handleError)
+      );
   }
 }
 

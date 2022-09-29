@@ -12,6 +12,7 @@ import { DialogDataStudent } from 'src/app/core/interfaces/dialog-data-student';
 export class StudentFormComponent implements OnInit {
 
   formStudent!: FormGroup; 
+  genders: string[] = ['masculino', 'femenino', 'otros'];
 
   constructor(private fb: FormBuilder, 
     private dialogRef: MatDialogRef<StudentFormComponent>,
@@ -26,6 +27,7 @@ export class StudentFormComponent implements OnInit {
       surname: [this.dialogData.student?.surname, [Validators.required, Validators.maxLength(80)]],
       dni: [this.dialogData.student?.dni, [Validators.required, Validators.pattern(/^\d+$/), Validators.minLength(6), Validators.maxLength(8)]],
       mail: [this.dialogData.student?.mail, [Validators.required, Validators.email]],
+      gender: [this.dialogData.student?.gender, [Validators.required]],
       message: [this.dialogData.student?.message, [Validators.maxLength(500)]]
     });
   }

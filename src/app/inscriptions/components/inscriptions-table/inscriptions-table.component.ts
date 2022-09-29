@@ -4,13 +4,19 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { Inscription } from 'src/app/core/models/inscription.model';
 import { Session } from 'src/app/core/models/session.model';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { InscriptionsService } from '../../services/inscriptions.service';
 import { InscriptionDetailComponent } from '../inscription-detail/inscription-detail.component';
 import { InscriptionFormComponent } from '../inscription-form/inscription-form.component';
 import { WIDTH_DIALOG } from 'src/app/shared/consts/consts';
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
+import { selectorLoadedInscriptions } from '../../states/selectors/inscriptions.selector';
+import { loadingInscriptions } from '../../states/actions/inscriptions.action';
+import { InscriptionState } from 'src/app/core/models/inscription.state';
+import { sessionSelector } from 'src/app/core/states/selectors/user.selector';
+import { AppState } from 'src/app/core/states/app.state';
+import { ValidateInscriptionsService } from 'src/app/core/services/validate-inscriptions.service';
 
 @Component({
   selector: 'app-inscriptions-table',
@@ -27,27 +33,26 @@ export class InscriptionsTableComponent implements OnInit {
   session$!: Observable<Session>;
 
   constructor(private inscriptionService: InscriptionsService,
+    private validateInscriptionsService: ValidateInscriptionsService,
+    private inscriptionsStore: Store<InscriptionState>,
     private matSnackBar: MatSnackBar,
-    private authService: AuthService,
+    private sessionStore: Store<AppState>,
     private dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.inscriptionService.getAllInscriptions().subscribe({
+    this.inscriptions$ = this.inscriptionsStore.select(selectorLoadedInscriptions);
+    this.inscriptions$.subscribe({
         next: (data: Inscription[]) => {
           this.LIST_INSCRIPTIONS = data;
           this.dataSource = new MatTableDataSource(this.LIST_INSCRIPTIONS);
         },
         error: (error) => {
-          console.error(error);
-        },
-        complete: () => {
-          console.log('Completado.');
+          this.matSnackBar.open(`Error! ${ error }`, 'Aceptar');
         }
       }
     );
 
-    this.inscriptions$ = this.inscriptionService.getAllInscriptions();
-    this.session$ = this.authService.getSession();
+    this.session$ = this.sessionStore.select(sessionSelector);
   }
 
   add() {
@@ -70,16 +75,21 @@ export class InscriptionsTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        let existsInscription = this.inscriptionService.existsInscription(result.idCourse, result.idStudent).subscribe({
-          next: (existsInscription) => {
-            if(!existsInscription) {
-              this.inscriptionService.addInscription(result);
-            } else {
-              this.matSnackBar.open("Ya existe esta inscripción", "Aceptar");
-            }
-          },
-          error: (error) => console.error(error)
-        });
+        let existsInscription = this.validateInscriptionsService.existsInscription(result.idCourse, result.idStudent)
+          .subscribe({
+            next: (existsInscription) => {
+              if(!existsInscription) {
+                this.inscriptionService.addInscription(result)
+                  .subscribe((inscription) => {
+                    this.inscriptionsStore.dispatch(loadingInscriptions());
+                    this.matSnackBar.open(`La inscripción del estudiante fue realizada exitosamente.`, 'Aceptar');
+                  });
+              } else {
+                this.matSnackBar.open("Ya existe esta inscripción", "Aceptar");
+              }
+            },
+            error: (error) => console.error(error)
+          });
 
         existsInscription.unsubscribe();
       }
@@ -109,7 +119,11 @@ export class InscriptionsTableComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result){
-        this.inscriptionService.modifyInscription(result);
+        this.inscriptionService.modifyInscription(result)
+          .subscribe((inscription) => {
+            this.inscriptionsStore.dispatch(loadingInscriptions());
+            this.matSnackBar.open(`La inscripción fue editada exitosamente.`, 'Aceptar');
+          });
       }
     });
   }
@@ -130,7 +144,11 @@ export class InscriptionsTableComponent implements OnInit {
         return;
       }
 
-      this.inscriptionService.deleteInscription(element.id);
+      this.inscriptionService.deleteInscription(element.id)
+        .subscribe((inscription) => {
+          this.inscriptionsStore.dispatch(loadingInscriptions());
+          this.matSnackBar.open(`La inscripción del estudiante fue eliminada exitosamente.`, 'Aceptar');
+        });
     });
   }
 

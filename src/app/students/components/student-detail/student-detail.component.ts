@@ -1,10 +1,15 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { Store } from '@ngrx/store';
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
 import { DialogDataStudent } from 'src/app/core/interfaces/dialog-data-student';
 import { Inscription } from 'src/app/core/models/inscription.model';
+import { InscriptionState } from 'src/app/core/models/inscription.state';
+import { FilterInscriptionsService } from 'src/app/core/services/filter-inscriptions.service';
 import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
+import { loadingInscriptions } from 'src/app/inscriptions/states/actions/inscriptions.action';
 
 @Component({
   selector: 'app-student-detail',
@@ -22,26 +27,25 @@ export class StudentDetailComponent implements OnInit {
 
   constructor(private dialogRef: MatDialogRef<StudentDetailComponent>,
     private dialog: MatDialog,
+    private matSnackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public dialogData: DialogDataStudent,
+    private filterInscriptionsService: FilterInscriptionsService,
+    private inscriptionsStore: Store<InscriptionState>,
     private inscriptionsService: InscriptionsService) {
 
-    }
+  }
 
   ngOnInit(): void {
-    let hasInscription = this.inscriptionsService.getInscriptionsForStudent(this.dialogData.student?.id).subscribe({
-      next: (data: Inscription[]) => {
-        this.LIST_INSCRIPTIONS = data as Inscription[];
-        this.dataSource = new MatTableDataSource(this.LIST_INSCRIPTIONS);
-      },
-      error: (error: any) => {
-        console.error(error);
-      },
-      complete: () => {
-        console.log('Completado.');
-      }
-    });
-
-    hasInscription.unsubscribe();
+    this.filterInscriptionsService.getInscriptionsForStudent(this.dialogData.student?.id)
+      .subscribe({
+        next: (data: Inscription[]) => {
+          this.LIST_INSCRIPTIONS = data as Inscription[];
+          this.dataSource = new MatTableDataSource(this.LIST_INSCRIPTIONS);
+        },
+        error: (error: any) => {
+          this.matSnackBar.open(`Error! ${ error }`, 'Aceptar');
+        }
+      });
   }
 
   close() {
@@ -64,7 +68,11 @@ export class StudentDetailComponent implements OnInit {
         return;
       }
 
-      this.inscriptionsService.deleteInscription(element.id);
+      this.inscriptionsService.deleteInscription(element.id)
+        .subscribe((inscription) => {
+          this.inscriptionsStore.dispatch(loadingInscriptions());
+          this.matSnackBar.open(`La inscripción del estudiante fue eliminada exitosamente.`, 'Aceptar');
+        });
     });
   }
 

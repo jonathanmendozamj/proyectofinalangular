@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>{{ this.dialogData.title || '' }}</h1>
+<div mat-dialog-content >
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Usuario</label>
+        <label class="font-weight-bold text-right">{{ this.dialogData.user.user || '' }}</label>
+    </div>
+
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Tipo</label>
+        <label class="font-weight-bold text-right">{{ this.dialogData.user.isAdmin ? 'Admin' : 'User' }}</label>
+    </div>
+
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Nombre</label>
+        <label class="font-weight-bold text-right">{{ this.dialogData.user.name || '' }}</label>
+    </div>
+
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Dirección</label>
+        <label class="font-weight-bold text-right">{{ this.dialogData.user.address || '' }}</label>
+    </div>
+
+    <div class="w-100 mb-2 d-flex justify-content-between" appearance="fill">
+        <label>Teléfono</label>
+        <label class="font-weight-bold text-right">{{ this.dialogData.user.phone || '' }}</label>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="close()">Cerrar</button>
+</div>

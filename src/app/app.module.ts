@@ -22,6 +22,10 @@ import { environment } from 'src/environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ROOT_REDUCERS } from './core/states/app.state';
 import { ConfirmationDialogComponent } from './core/components/confirmation-dialog/confirmation-dialog.component';
+import { InscriptionEffects } from './inscriptions/states/effects/inscriptions.effect';
+import { ValidateInscriptionsService } from './core/services/validate-inscriptions.service';
+import { FilterInscriptionsService } from './core/services/filter-inscriptions.service';
+import * as FromInscriptions from './inscriptions/states/reducers/inscriptions.reducer';
 
 @NgModule({
   declarations: [
@@ -44,10 +48,18 @@ import { ConfirmationDialogComponent } from './core/components/confirmation-dial
     BrowserAnimationsModule,
     SharedModule,
     StoreModule.forRoot(ROOT_REDUCERS),
+    StoreModule.forFeature(
+      FromInscriptions.INSCRIPTIONS_FEATURED_KEY,
+      FromInscriptions.inscriptionsReducer
+    ),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([InscriptionEffects])
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService, 
+    ValidateInscriptionsService,
+    FilterInscriptionsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

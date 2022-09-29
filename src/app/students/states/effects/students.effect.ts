@@ -10,7 +10,7 @@ export class StudentEffects {
     loadCourses$ = createEffect((): any => {
         return this.actions$.pipe(
             ofType(StudentActions.loadingStudents),
-            mergeMap(() => this.studentsService.getAllStudentsNew()
+            mergeMap(() => this.studentsService.getAllStudents()
                 .pipe(
                     map((students: Student[]) => StudentActions.loadedStudents({students: students}))
                 ))

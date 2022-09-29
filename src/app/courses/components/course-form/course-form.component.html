@@ -19,6 +19,34 @@
             <mat-error *ngIf="this.formCourse.get('commission')?.errors?.['maxlength'] && this.formCourse.get('commission')?.touched">La comisión no puede tener más de 8 caracteres.</mat-error>
             <mat-error *ngIf="this.formCourse.get('commission')?.errors?.['pattern'] && this.formCourse.get('commission')?.touched">La comisión debe ser únicamente numérico.</mat-error>
         </mat-form-field>
+
+        <!-- Cantidad de horas -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Cantidad de horas</mat-label>
+            <input formControlName="countHours" matInput>
+            <mat-error *ngIf="this.formCourse.get('countHours')?.errors?.['required'] && this.formCourse.get('countHours')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('countHours')?.errors?.['minlength'] && this.formCourse.get('countHours')?.touched">La cantidad de horas no puede tener menos de 1 caracteres.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('countHours')?.errors?.['maxlength'] && this.formCourse.get('countHours')?.touched">La cantidad de horas no puede tener más de 3 caracteres.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('countHours')?.errors?.['pattern'] && this.formCourse.get('countHours')?.touched">La cantidad de horas debe ser únicamente numérico.</mat-error>
+        </mat-form-field>
+
+        <!-- Cantidad de clases -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Cantidad de clases</mat-label>
+            <input formControlName="countClasses" matInput>
+            <mat-error *ngIf="this.formCourse.get('countClasses')?.errors?.['required'] && this.formCourse.get('countClasses')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('countClasses')?.errors?.['minlength'] && this.formCourse.get('countClasses')?.touched">La cantidad de clases no puede tener menos de 1 caracteres.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('countClasses')?.errors?.['maxlength'] && this.formCourse.get('countClasses')?.touched">La cantidad de clases no puede tener más de 3 caracteres.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('countClasses')?.errors?.['pattern'] && this.formCourse.get('countClasses')?.touched">La cantidad de clases debe ser únicamente numérico.</mat-error>
+        </mat-form-field>
+
+        <!-- Profesor -->
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Profesor</mat-label>
+            <input formControlName="professor" matInput>
+            <mat-error *ngIf="this.formCourse.get('professor')?.errors?.['required'] && this.formCourse.get('professor')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formCourse.get('professor')?.errors?.['maxlength'] && this.formCourse.get('professor')?.touched">El nombre del profesor no puede tener más de 150 caracteres.</mat-error>
+        </mat-form-field>
     </form>
 </div>
 

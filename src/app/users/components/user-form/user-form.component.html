@@ -16,6 +16,31 @@
             </mat-slide-toggle>
             <mat-error *ngIf="this.formUser.get('isAdmin')?.errors?.['required'] && this.formUser.get('isAdmin')?.touched">Este campo no puede quedar vacío.</mat-error>
         </div>
+
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input formControlName="name" matInput>
+            <mat-error *ngIf="this.formUser.get('name')?.errors?.['required'] && this.formUser.get('name')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formUser.get('name')?.errors?.['minLength'] && this.formUser.get('name')?.touched">Este campo no puede tener menos de 5 caracteres.</mat-error>
+            <mat-error *ngIf="this.formUser.get('name')?.errors?.['maxLength'] && this.formUser.get('name')?.touched">Este campo no puede tener más de 150 caracteres.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Dirección</mat-label>
+            <input formControlName="address" matInput>
+            <mat-error *ngIf="this.formUser.get('address')?.errors?.['required'] && this.formUser.get('address')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formUser.get('address')?.errors?.['minLength'] && this.formUser.get('address')?.touched">Este campo no puede tener menos de 5 caracteres.</mat-error>
+            <mat-error *ngIf="this.formUser.get('address')?.errors?.['maxLength'] && this.formUser.get('address')?.touched">Este campo no puede tener más de 200 caracteres.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100 mb-2" appearance="fill">
+            <mat-label>Teléfono</mat-label>
+            <input formControlName="phone" matInput>
+            <mat-error *ngIf="this.formUser.get('phone')?.errors?.['required'] && this.formUser.get('phone')?.touched">Este campo no puede quedar vacío.</mat-error>
+            <mat-error *ngIf="this.formUser.get('phone')?.errors?.['pattern'] && this.formUser.get('phone')?.touched">Este campo tiene que tener caracteres numéricos únicamente.</mat-error>
+            <mat-error *ngIf="this.formUser.get('phone')?.errors?.['minLength'] && this.formUser.get('phone')?.touched">Este campo no puede tener menos de 5 caracteres.</mat-error>
+            <mat-error *ngIf="this.formUser.get('phone')?.errors?.['maxLength'] && this.formUser.get('phone')?.touched">Este campo no puede tener más de 200 caracteres.</mat-error>
+        </mat-form-field>
     
         <mat-form-field class="w-100 mb-2" appearance="fill">
             <mat-label>Contraseña</mat-label>

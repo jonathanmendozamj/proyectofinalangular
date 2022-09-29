@@ -6,5 +6,4 @@ export const createSession = createAction(
     '[Auth Login] Sesión iniciada',
     props<{ user: User }>()
 );
-
 export const closeSession = createAction('[Session] Cerrar sesión');
