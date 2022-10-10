@@ -7,7 +7,6 @@ import { StudentDetailComponent } from '../student-detail/student-detail.compone
 import { Student } from 'src/app/core/models/student.model';
 import { Observable } from 'rxjs';
 import { Session } from 'src/app/core/models/session.model';
-import { AuthService } from 'src/app/core/services/auth.service';
 import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 import { WIDTH_DIALOG } from 'src/app/shared/consts/consts';
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';

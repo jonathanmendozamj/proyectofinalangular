@@ -21,25 +21,25 @@
         <!-- Columna nombre -->
         <ng-container matColumnDef="Nombre">
             <th mat-header-cell *matHeaderCellDef appFontSize>Nombre completo</th>
-            <td mat-cell *matCellDef="let element">{{ element | studentName }}</td>
+            <td mat-cell *matCellDef="let element">{{ ((element | studentName) || 'NO DISPONIBLE') }}</td>
         </ng-container>
     
         <!-- Columna DNI -->
         <ng-container matColumnDef="DNI">
             <th mat-header-cell *matHeaderCellDef appFontSize>DNI</th>
-            <td mat-cell *matCellDef="let element">{{ element.dni }}</td>
+            <td mat-cell *matCellDef="let element">{{ (element.dni || 'NO DISPONIBLE') }}</td>
         </ng-container>
     
         <!-- Columna Curso -->
         <ng-container matColumnDef="Curso">
             <th mat-header-cell *matHeaderCellDef appFontSize>Curso</th>
-            <td mat-cell *matCellDef="let element">{{ element.nameCourse | uppercase }}</td>
+            <td mat-cell *matCellDef="let element">{{ ((element.nameCourse | uppercase) || 'NO DISPONIBLE') }}</td>
         </ng-container>
 
         <!-- Columna Curso -->
         <ng-container matColumnDef="Comision">
             <th mat-header-cell *matHeaderCellDef appFontSize>Comisión</th>
-            <td mat-cell *matCellDef="let element">{{ element.commission }}</td>
+            <td mat-cell *matCellDef="let element">{{ (element.commission || 'NO DISPONIBLE') }}</td>
         </ng-container>
     
         <!-- Columna Acciones -->

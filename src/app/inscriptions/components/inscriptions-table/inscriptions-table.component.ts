@@ -112,7 +112,7 @@ export class InscriptionsTableComponent implements OnInit {
       width: WIDTH_DIALOG,
       data: {
         inscription: element,
-        title: 'Agregar nueva inscripción',
+        title: 'Editar inscripción',
         modify: false
       }
     });

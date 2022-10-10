@@ -49,8 +49,6 @@ export class InscriptionFormComponent implements OnInit {
       idUser: [idCurrentUser, [Validators.required]]
     });
 
-    console.log(idCurrentUser);
-
     this.courseService.getAllCourses()
       .subscribe({
         next: (data: Course[]) => {

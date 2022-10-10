@@ -3,16 +3,14 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
 import { DialogDataCourse } from 'src/app/core/interfaces/dialog-data-course';
 import { Inscription } from 'src/app/core/models/inscription.model';
 import { InscriptionState } from 'src/app/core/models/inscription.state';
 import { FilterInscriptionsService } from 'src/app/core/services/filter-inscriptions.service';
-import { ValidateInscriptionsService } from 'src/app/core/services/validate-inscriptions.service';
 import { InscriptionsService } from 'src/app/inscriptions/services/inscriptions.service';
 import { loadingInscriptions } from 'src/app/inscriptions/states/actions/inscriptions.action';
-import { selectorLoadedInscriptions } from 'src/app/inscriptions/states/selectors/inscriptions.selector';
 
 @Component({
   selector: 'app-course-detail',
@@ -72,7 +70,7 @@ export class CourseDetailComponent implements OnInit {
       }
 
       this.inscriptionsService.deleteInscription(element.id)
-        .subscribe((inscription) => {
+        .subscribe((inscription: any) => {
           this.inscriptionsStore.dispatch(loadingInscriptions());
           this.matSnackBar.open(`La inscripción del estudiante fue eliminada exitosamente.`, 'Aceptar');
         });

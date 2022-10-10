@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, lastValueFrom, map, Observable, throwError } from 'rxjs';
 import { Inscription } from 'src/app/core/models/inscription.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -28,38 +28,14 @@ export class InscriptionsService {
 
   }
 
+  async getAllData() {
+    this.courses = await lastValueFrom(this.coursesService.getAllCourses(), { defaultValue: [] });
+    this.students = await lastValueFrom(this.studentsService.getAllStudents(), { defaultValue: [] });
+    this.users = await lastValueFrom(this.usersService.getAllUsers(), { defaultValue: [] });
+  }
+
   getAllInscriptions() {
-    this.coursesService.getAllCourses()
-      .subscribe({
-        next: (courses: Course[]) => {
-          this.courses = courses;
-        },
-        error: (error: any) => {
-          console.error(error);
-        }
-      });
-
-    this.studentsService.getAllStudents()
-      .subscribe({
-        next: (students) => {
-          this.students = students;
-        },
-        error: (error) => {
-          console.error(error);
-        }
-      });
-
-    this.usersService.getAllUsers()
-      .subscribe({
-        next: (users) => {
-          this.users = users;
-        },
-        error: (error) => {
-          console.error(error);
-        }
-      });
-
-    this.usersService.getAllUsers()
+    this.getAllData();
 
     return this.http.get<Inscription[]>(`${ API }/inscriptions`)
       .pipe(
@@ -69,12 +45,12 @@ export class InscriptionsService {
             let courseData = this.courses.find(course => String(item.idCourse) === course.id);
             let studentData = this.students.find(student => String(item.idStudent) === student.id);
             let userData = this.users.find(user => String(item.idUser) === user.id);
-
+            
             return { 
               ...item,
+              ...userData,
               ...courseData, 
               ...studentData,
-              ...userData,
               dateInscription: (item.dateInscription * 1000),
               id: item.id
             };

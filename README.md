@@ -1,27 +1,26 @@
-# ProyectoFinal
+# Gestión de cursos e inscripciones
+> Este es un proyecto realizado para el curso de Angular de CODERHOUSE, comisión 32310. Se trata de un sistema de gestión de cursos, inscripciones a los mismos, estudiantes y usuarios.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.5.
+## Instalación mediante git clone
+Si querés clonar este proyecto de forma local, tendrás que ejecutar los siguientes comandos en la terminal de forma secuencial: 
+```sh
+git clone https://github.com/jonathanmendozamj/proyectofinalangular
+npm install 
+npm start
+```
 
-## Development server
+## Dependencias
+Se instalaron las siguientes dependencias en este proyecto.
+- bootstrap (v. 5.2.0): contiene estilos responsivos.
+- rxjs (v. 7.5.0)
+- ngrx/store (v. 14.3.1)
+- ngrx/store-devtools (v. 14.3.1)
+- angular material (v. 14.1.1)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Funcionamiento
+Primero, entramos a la dirección indicada, donde se mostrará un formulario de login. En el mismo, cargamos nuestro nombre de usuario y contraseña. Luego, hacemos clic en el botón de "Iniciar Sesión". Si los datos son correctos, nos redirigirá hacia la pantalla principal. 
+Hay dos roles a considerar como tipos de usuarios: Admin y User.
+En ella se muestra un Navbar y Toolbar al costado izquierdo de la pantalla, donde se mostrarán todas las opciones.
+Hay varias opciones, en las cuales se mencionan "Inicio", "Estudiantes", "Inscripciones", "Cursos", "Usuarios" y "Cerrar Sesión".
+El tipo de usuario "User" puede ver los datos de los estudiantes, inscripciones y cursos, pero no puede acceder a la sección "Usuarios".
+El tipo de usuario "Admin" puede realizar alta, baja y modificaciones de los estudiantes, inscripciones, cursos y usuarios. También puede desinscribir a un estudiante de un curso desde la sección del detalle del curso, y desinscribir a un curso desde la sección del detalle de estudiante.

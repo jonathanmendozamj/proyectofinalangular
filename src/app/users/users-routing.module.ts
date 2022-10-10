@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from '../core/guards/admin.guard';
 import { UsersContainerComponent } from './components/users-container/users-container.component';
 
 const routes: Routes = [
@@ -9,7 +10,8 @@ const routes: Routes = [
             {
                 path: 'lista', 
                 component: UsersContainerComponent,
-                title: 'Usuarios'
+                title: 'Usuarios',
+                canActivate: [AdminGuard]
             }
         ]
     }
