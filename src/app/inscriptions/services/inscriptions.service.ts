@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, lastValueFrom, map, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, delay, lastValueFrom, map, Observable, throwError } from 'rxjs';
 import { Inscription } from 'src/app/core/models/inscription.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -39,6 +39,7 @@ export class InscriptionsService {
 
     return this.http.get<Inscription[]>(`${ API }/inscriptions`)
       .pipe(
+        delay(2000),
         catchError(handleError),
         map(inscriptions => inscriptions.map(
           item => {
